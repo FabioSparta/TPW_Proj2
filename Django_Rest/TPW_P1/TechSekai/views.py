@@ -151,7 +151,7 @@ def search2(request, filter, value): ######
     return render(request, 'prodsList.html', {'products': products})
 
 
-def account_page(request):
+def account_page(request): #######
     if request.user.is_authenticated:
         user = User.objects.get(django_user=request.user)
         orders_list = Order.objects.filter(user=user).order_by("-id")
@@ -575,7 +575,7 @@ def home_content(request):
             'hot_deals': hot_deals, 'new_arrivals': new_arrivals, 'all_categories': categories.exclude(name='Other'), 'shops': shops}
 
 
-def product_shops(request, prod_id):
+def product_shops(request, prod_id): ## desnecessario
     product_in_wishlist = False
     product = Product.objects.get(id=prod_id)
     item_per_shop = Item.objects.filter(product=product)
