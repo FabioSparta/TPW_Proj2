@@ -8,6 +8,11 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    ## REST ENDPOINTS
+    path('api/prods/search', views.get_prods),
+
+    ############
+
     # GENERAL PAGES
     path('', views.home, name='home'),
     path('search/', views.search, name='search'),
@@ -17,8 +22,6 @@ urlpatterns = [
 
 
     # ACCOUNT RELATED
-    #path('register', views.register, name='register'),
-    #path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('login/', views.login_view, name='login'),
     path('accounts/', include('allauth.urls')),
     path('accounts/signup/', views.account_signup_view),
@@ -45,15 +48,8 @@ urlpatterns = [
     path('items/edit/<int:id>/', views.edit_item, name='edit_item'),
 
     ## FAZER COMPRAS
-    # path('account/order/', views.order, name='order'),
     path('account/shoppingcart/', views.cart, name='cart'),
-    path('account/wishlist', views.wishlist, name='wishlist'), ##TODO: PEDRO -> CONFIRMAR SE POSSO COLOCAR / NO FINAL URL
-
-    ##TODO: NOTA ->  POSSIVEIS URLS + VIEWS NECESSARIAS PRA CONTA
-    # TODO: Encontrei isto pra permitir mudanca de pass c os mecanismos do django como pra login e logout: https://docs.djangoproject.com/en/3.1/topics/auth/default/  -> ver em: Authentication Views¶
-    # path('account/change_password/', auth_views.PasswordChangeView.as_view(template_name='change_pwd.html', success_url='/account/password_changed'), name='change_password'),
-    # path('account/password_changed', views.password_changed, name='password_changed'),
-
+    path('account/wishlist', views.wishlist, name='wishlist'),
 
     ## GESTAO DAS LOJAS
     path('shops/add/', views.add_shop, name='add_shop'),

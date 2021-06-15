@@ -9,8 +9,23 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from allauth.account.views import SignupView
 
+# Imports for Django Rest
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from TechSekai.serializers import *
+######################
+
 
 global_products = []
+
+
+# Rest EndPoints
+@api_view(['GET'])
+def get_prods(request):
+    return Response("")
+
+#############
 
 # Create your views here.
 def home(request):
