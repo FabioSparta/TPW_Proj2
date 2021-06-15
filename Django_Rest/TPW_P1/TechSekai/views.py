@@ -33,7 +33,7 @@ def home(request):
     return render(request, 'home.html', content)
 
 
-def login_view(request):
+def login_view(request): ########
     register_error = False
     login_error = False
     if request.method == "POST":
@@ -78,7 +78,7 @@ def login_view(request):
     return render(request, 'login.html', content)
 
 
-def new_arrivals(request):
+def new_arrivals(request): ########
     products = Product.objects.all().order_by("id")[0:20]
 
     content = {
@@ -88,7 +88,7 @@ def new_arrivals(request):
     return render(request, 'new_hot_items.html', content)
 
 
-def hot_deals(request):
+def hot_deals(request): #########
     products = Product.objects.all().order_by("-qty_sold")[0:20]  # Apenas os {20} Produtos + vendidos
     content = {
         'products': products,
@@ -97,7 +97,7 @@ def hot_deals(request):
     return render(request, 'new_hot_items.html', content)
 
 
-def search(request):
+def search(request):  ##########
     if 'name' in request.get_full_path():
         name = request.GET['name']
         category = request.GET['category']
@@ -130,7 +130,7 @@ def search(request):
     return render(request, 'prodsList.html', {'products': products})
 
 
-def search2(request, filter, value):
+def search2(request, filter, value): ######
     if filter == 'category':
         f_products = Product.objects.filter(category__name__icontains=value)
     elif filter == 'brand':
@@ -258,7 +258,7 @@ def process_address_edit(address_form, user, updated):
     return updated
 
 
-def add_product(request):
+def add_product(request): ######
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if request.method == 'POST':
@@ -307,7 +307,7 @@ def add_product(request):
         return render(request, 'error.html')
 
 
-def add_item(request):
+def add_item(request): ######
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if request.method == 'POST':
@@ -336,7 +336,7 @@ def add_item(request):
         return render(request, 'error.html')
 
 
-def edit_item(request, id):
+def edit_item(request, id): #######
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if request.method == 'POST':
@@ -362,7 +362,7 @@ def edit_item(request, id):
         return render(request, 'error.html')
 
 
-def list_items(request):
+def list_items(request): #####
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         items = Item.objects.filter(shop=loggedShop)
@@ -371,14 +371,14 @@ def list_items(request):
         return render(request, 'error.html')
 
 
-def delete_item(request, id):
+def delete_item(request, id): #####
     if request.user.groups.filter(name='shops').exists():
         Item.objects.get(id=id).delete()
         return redirect('items')
     return render(request, 'error.html')
 
 
-def edit_product(request, pid):
+def edit_product(request, pid): #####
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if Item.objects.filter(product_id=pid).count() > 1:
@@ -421,7 +421,7 @@ def edit_product(request, pid):
     return render(request, 'error.html')
 
 
-def delete_product(request, pid):
+def delete_product(request, pid): ######
     if request.user.groups.filter(name='shops').exists():
         if Item.objects.filter(product_id=pid).count() > 1:
             return render(request, 'productForm.html', {'msgErr': 'You don\'t have permissions to delete this product anymore, other shops depend on it', 'page': 'Edit', 'obj': 'Product'})
@@ -430,7 +430,7 @@ def delete_product(request, pid):
     return render(request, 'error.html')
 
 
-def list_products(request):
+def list_products(request): #########
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         p = Product.objects.filter(creator=loggedShop)
@@ -439,17 +439,17 @@ def list_products(request):
         return render(request, 'error.html')
 
 
-def list_shops(request):
+def list_shops(request): ######
     shops = Shop.objects.all()
     return render(request, 'shopsList.html', {'shops': shops})
 
 
-def see_shop(request, sid):
+def see_shop(request, sid): ######
     shop = Shop.objects.get(id=sid)
     return render(request, 'shopDetails.html', {'shop': shop})
 
 
-def add_shop(request):
+def add_shop(request): #######
     if request.method == 'POST':
         register_form = RegisterDjangoUserForm(request.POST)
         form = AddShopForm(request.POST)
