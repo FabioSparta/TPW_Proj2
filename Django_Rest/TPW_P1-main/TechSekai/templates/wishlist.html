@@ -1,0 +1,137 @@
+
+{% extends 'mainLayout.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TechSekai</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'imgs/icon_logo.png' %}">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="{% static 'vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/plugins/owl-carousel/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/plugins/magnific-popup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/plugins/jquery.countdown.css' %}">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/skins/skin-demo-13.css' %}">
+    <link rel="stylesheet" href="{% static 'css/demos/demo-13.css' %}">
+</head>
+
+<body>
+{% block main %}
+    <div class="page-wrapper">
+        <main class="main">
+        	<div class="page-header text-center">
+        		<div class="container">
+        			<h1 class="page-title">Wishlist</h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+           <div style="margin-top: 30px "></div>
+
+            <div class="page-content">
+            	<div class="container">
+                {% if wishlist.count == 0 %}
+                    <div style="text-align: center">
+                        <p class="btn btn-danger disabled btn-lg" style="color: white; margin-bottom: 10px; border-radius: 10px;"> Your Wish List is empty! </p>
+                    </div>
+
+                            {% else %}
+					<table class="table table-wishlist table-mobile">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th>Lowest Price</th>
+								<th>Stock Status</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+
+                             {% for prod in wishlist %}
+                            <tr>
+								<td class="product-col">
+									<div class="product">
+										<figure class="product-media">
+											<a href="">
+												<img src="/media/{{ prod.image }}" alt="Product image">
+											</a>
+										</figure>
+
+										<h3 class="product-title">
+											<a href="#">{{ prod.name }}</a>
+										</h3><!-- End .product-title -->
+									</div><!-- End .product -->
+								</td>
+								<td class="price-col">${{ prod.lowest_price }}</td>
+                                 {% for key, value in prod_stock.items %}
+                                     {% if key == prod.name %}
+                                         {% if value == True %}
+                                             <td class="stock-col"><span class="in-stock">In stock</span></td>
+                                             <td class="action-col">
+									        <a  href="/product/{{ prod.id }}/" class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Go to Product </a>
+								            </td>
+                                             {% else %}
+                                             <td class="stock-col"><span class="out-of-stock">Out of stock</span></td>
+                                             <td class="action-col">
+									            <button class="btn btn-block btn-outline-primary-2 disabled">Out of Stock</button>
+                                             </td>
+                                         {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+								<td class="remove-col"><a href="/rem_from_wishlist/{{ prod.id }}" class="btn-remove"><i class="icon-close"></i></a></td>
+							</tr>
+                        {% endfor %}
+                        {% endif %}
+
+
+						</tbody>
+					</table><!-- End .table table-wishlist -->
+	            	<div class="wishlist-share">
+	            		<div class="social-icons social-icons-sm mb-2">
+	            			<label class="social-label">Share on:</label>
+	    					<a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+	    					<a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+	    					<a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+	    					<a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+	    					<a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+	    				</div><!-- End .soial-icons -->
+	            	</div><!-- End .wishlist-share -->
+            	</div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+    </div>
+{% endblock %}
+
+    <!-- Plugins JS File -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/jquery.hoverIntent.min.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/superfish.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-input-spinner.js' %}"></script>
+<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'js/jquery.plugin.min.js' %}"></script>
+<script src="{% static 'js/jquery.countdown.min.js' %}"></script>
+<script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"></script>
+
+<!-- Main JS File -->
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/demos/demo-13.js' %}"></script>
+</body>
+
+
+</html>

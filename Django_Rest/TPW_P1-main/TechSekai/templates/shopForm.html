@@ -1,0 +1,65 @@
+{% extends 'mainLayout.html' %}
+{% block main %}
+    <h2 style="padding-left: 20%; padding-top: 2%; color: #39f" > {{ page }} shop </h2>
+    {% if msg %}
+        <div style="text-align: center" role="alert">
+            <p class="btn btn-success disabled btn-lg" style="margin-bottom: 10px; border-radius: 10px"><strong>Success: </strong> {{ msg }}</p>
+        </div>
+    {% elif msgErr %}
+        <div style="text-align: center" role="alert">
+            <p class="btn btn-danger disabled btn-lg" style="margin-bottom: 10px; border-radius: 10px"> <strong>Error: </strong> {{ msgErr }}</p>
+        </div>
+    {% else %}
+        <form action="." method="POST" style="padding: 2% 20%;" enctype='multipart/form-data'>
+            {% csrf_token %}
+            {% for form in forms %}
+                {% if forloop.counter == 1 %}
+                    <h4> Shop Details</h4>
+                {% elif forloop.counter == 2 %}
+                    <h4> Address Details</h4>
+                {% elif forloop.counter == 3 %}
+                    <h4> Owner Details</h4>
+                {% endif %}
+                {% for field in form %}
+                    <div class="form-group row">
+                        <label class="col-sm-2"> {{ field.label_tag }}</label>
+                        <div class="col-md-4">
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% if page == 'Add' %}
+                <div class="form-group" align="center">
+                    <input class="btn btn-primary rounded btn-sm" type="submit" value="Create">
+                </div>
+            {% else %}
+                <div class="form-group" align="center">
+                    <input class="btn btn-primary rounded btn-sm" type="submit" value="Update Account">
+                    <button class="btn btn-danger rounded btn-sm" type="button" data-toggle="modal" data-target="#exampleModal">
+                                Delete
+                            </button>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete Account</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <p style="padding-top: 20px; padding-bottom: 20px; font-size: 20px">Are you sure you want to delete your account?</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                                    <a style="color: white;" role="button" href="/shops/delete/"><button type="button" class="btn btn-danger">Yes</button></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                </div>
+            {% endif %}
+        </form>
+    {% endif %}
+{% endblock %}
