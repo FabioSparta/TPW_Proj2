@@ -8,10 +8,14 @@ from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from allauth.account.views import SignupView
+import json
+from types import SimpleNamespace
 
-# Imports for Django Rest
+# Imports for Django
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from TechSekai.serializers import *
 ######################
@@ -20,12 +24,164 @@ from TechSekai.serializers import *
 global_products = []
 
 
-# Rest EndPoints
-@api_view(['GET'])
-def get_prods(request):
-    return Response("")
+# ########################################### REST ENDPOINTS ###########################################################
 
-#############
+# GENERAL USE ENDPOINTS
+
+@api_view(['GET'])
+def get_prods_hotdeals(request):
+    products = Product.objects.all().order_by("-qty_sold")[0:10]  # Only {10} most sold
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_prods_newarrivals(request):
+    products = Product.objects.all().order_by("id")[0:10]  # Only {10} most recent
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# CLIENT USER ENDPOINTS
+
+@api_view(['POST'])
+def sign_up(request):
+    serializer = RegistrationSerializer(data=request.data)
+
+    if serializer.is_valid():
+        # Save DjangoAuth User
+        django_user = serializer.save()
+
+        # Save App User
+        user = User()
+        user.django_user = django_user
+        cart = Cart(user=user)
+        wishlist = WishList(user=user)
+        user.save()
+        cart.save()
+        wishlist.save()
+
+        # Gen Response
+        data = {'response': "Successfully registered the new user.", 'email': user.django_user.email,
+                'username': user.django_user.username, 'token': Token.objects.get(user=django_user).key}
+
+        return Response(data, status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_info(request):
+    user = User.objects.get(django_user=request.user)
+    serializer = UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_address_add(request):
+    serializer = AddressSerializer(data=request.data)
+    if serializer.is_valid():
+        user = User.objects.get(django_user=request.user)
+        serializer.save()
+        user.address = json.loads(json.dumps(serializer.data), object_hook=lambda d: Address(**d))
+        user.save()
+        return Response("Address updated successfully.", status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_201_CREATED)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def user_address_update(request):
+    user = User.objects.get(django_user=request.user)
+
+    if user.address is None:
+        return Response("This User does not have an address yet. ", status=status.HTTP_404_NOT_FOUND)
+
+    serializer = AddressSerializer(user.address, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response("Address updated successfully.", status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_201_CREATED)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def user_address_rem(request):
+    user = User.objects.get(django_user=request.user)
+
+    if user.address is not None:
+        user.address.delete()
+        return Response("Address removed successfully.", status=status.HTTP_204_NO_CONTENT)
+
+    return Response("This User does not have an address yet. ", status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_cart(request):
+    user = User.objects.get(django_user=request.user)
+    cart_user = Cart.objects.get(user=user)
+    cart_items = Cart_Item.objects.filter(cart=cart_user).order_by('id')
+    serializer = CartItemSerializer(cart_items, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_wishlist(request):
+    user = User.objects.get(django_user=request.user)
+    user_wishlist = WishList.objects.get(user=user)
+    wishlist_items = user_wishlist.prods.all()
+    serializer = ProductSerializer(wishlist_items, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def wishlist_add(request):
+    # Check if product exists
+    try:
+        prod = Product.objects.get(id=request.POST['prod_id'])
+    except Product.DoesNotExist:
+        return Response("The product with id=" + request.POST['prod_id'] + " does not exist.",
+                        status.HTTP_404_NOT_FOUND)
+
+    # Save Product in Wishlist
+    user = User.objects.get(django_user=request.user)
+    user_wishlist = WishList.objects.get(user=user)
+    if prod not in user_wishlist.prods.all():
+        user_wishlist.prods.add(prod)
+        return Response(prod.name + " was added to your wishlist successfully.", status.HTTP_201_CREATED)
+
+    return Response(prod.name + " is already in your wishlist.", status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def wishlist_remove(request, prod_id):
+    # Check if product exists
+    try:
+        prod = Product.objects.get(id=prod_id)
+    except Product.DoesNotExist:
+        return Response("The product with id=" + prod_id + " does not exist.", status.HTTP_404_NOT_FOUND)
+
+    # Remove Product from Wishlist
+    user = User.objects.get(django_user=request.user)
+    user_wishlist = WishList.objects.get(user=user)
+    if prod in user_wishlist.prods.all():
+        user_wishlist.prods.remove(prod)
+        return Response(prod.name + " was successfully removed from your wishlist.", status.HTTP_204_NO_CONTENT)
+
+    return Response("There is no " + prod.name + " in your wishlist.", status.HTTP_200_OK)
+
+
+# ######################################################################################################################
 
 # Create your views here.
 def home(request):
@@ -33,7 +189,7 @@ def home(request):
     return render(request, 'home.html', content)
 
 
-def login_view(request): ########
+def login_view(request):  ########
     register_error = False
     login_error = False
     if request.method == "POST":
@@ -74,11 +230,12 @@ def login_view(request): ########
     else:
         register_form = RegisterDjangoUserForm()
         login_form = LoginDjangoUserForm()
-    content = {'user_form': register_form, 'login_form': login_form, 'register_error': register_error, 'login_error': login_error}
+    content = {'user_form': register_form, 'login_form': login_form, 'register_error': register_error,
+               'login_error': login_error}
     return render(request, 'login.html', content)
 
 
-def new_arrivals(request): ########
+def new_arrivals(request):  ########
     products = Product.objects.all().order_by("id")[0:20]
 
     content = {
@@ -88,7 +245,7 @@ def new_arrivals(request): ########
     return render(request, 'new_hot_items.html', content)
 
 
-def hot_deals(request): #########
+def hot_deals(request):  #########
     products = Product.objects.all().order_by("-qty_sold")[0:20]  # Apenas os {20} Produtos + vendidos
     content = {
         'products': products,
@@ -110,7 +267,8 @@ def search(request):  ##########
             if category == 'all':
                 global_products = [i.product for i in items if str(name).lower() in i.product.name.lower()]
             else:
-                global_products = [i.product for i in items if str(name).lower() in i.product.name.lower() or str(category).lower() in i.product.category.name.lower()]
+                global_products = [i.product for i in items if str(name).lower() in i.product.name.lower() or str(
+                    category).lower() in i.product.category.name.lower()]
         else:
             if category == 'all':
                 global_products = Product.objects.filter(name__icontains=name)
@@ -130,7 +288,7 @@ def search(request):  ##########
     return render(request, 'prodsList.html', {'products': products})
 
 
-def search2(request, filter, value): ######
+def search2(request, filter, value):  ######
     if filter == 'category':
         f_products = Product.objects.filter(category__name__icontains=value)
     elif filter == 'brand':
@@ -151,7 +309,7 @@ def search2(request, filter, value): ######
     return render(request, 'prodsList.html', {'products': products})
 
 
-def account_page(request): #######
+def account_page(request):  #######
     if request.user.is_authenticated:
         user = User.objects.get(django_user=request.user)
         orders_list = Order.objects.filter(user=user).order_by("-id")
@@ -258,7 +416,7 @@ def process_address_edit(address_form, user, updated):
     return updated
 
 
-def add_product(request): ######
+def add_product(request):  ######
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if request.method == 'POST':
@@ -288,7 +446,9 @@ def add_product(request): ######
                     brand.save()
 
                 try:
-                    p = Product(qty_sold=0, lowest_price=price, reference_number=reference_number, name=name, details=details, warehouse=warehouse, image=image, category=category, brand=brand, creator=loggedShop)
+                    p = Product(qty_sold=0, lowest_price=price, reference_number=reference_number, name=name,
+                                details=details, warehouse=warehouse, image=image, category=category, brand=brand,
+                                creator=loggedShop)
                     p.save()
 
                     c = Category.objects.get(name=category)
@@ -298,8 +458,12 @@ def add_product(request): ######
                     i = Item(price=price, shop=loggedShop, product=p, stock=1)
                     i.save()
                 except:
-                    return render(request, 'productForm.html', {'msgErr': ' Product not inserted, try again later!', 'page': 'Add', 'obj': 'Product'})
-                return render(request, 'productForm.html', {'msg': ' Product ' + p.name + ' inserted successfully!', 'page': 'Add', 'obj': 'Product'})
+                    return render(request, 'productForm.html',
+                                  {'msgErr': ' Product not inserted, try again later!', 'page': 'Add',
+                                   'obj': 'Product'})
+                return render(request, 'productForm.html',
+                              {'msg': ' Product ' + p.name + ' inserted successfully!', 'page': 'Add',
+                               'obj': 'Product'})
         else:
             form = AddProductForm()
             return render(request, 'productForm.html', {'form': form, 'page': 'Add', 'obj': 'Product'})
@@ -307,7 +471,7 @@ def add_product(request): ######
         return render(request, 'error.html')
 
 
-def add_item(request): ######
+def add_item(request):  ######
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if request.method == 'POST':
@@ -323,12 +487,13 @@ def add_item(request): ######
                     i.save()
 
                     if i.price < prod.lowest_price:
-                       prod.lowest_price = i.price
-                       prod.save()
+                        prod.lowest_price = i.price
+                        prod.save()
 
                 except:
                     return render(request, 'productForm.html')
-                return render(request, 'productForm.html', {'msg': ' Item inserted successfully!', 'page': 'Add', 'obj': 'Item'})
+                return render(request, 'productForm.html',
+                              {'msg': ' Item inserted successfully!', 'page': 'Add', 'obj': 'Item'})
         else:
             form = AddItem()
             return render(request, 'productForm.html', {'form': form, 'page': 'Add', 'obj': 'Item'})
@@ -336,7 +501,7 @@ def add_item(request): ######
         return render(request, 'error.html')
 
 
-def edit_item(request, id): #######
+def edit_item(request, id):  #######
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if request.method == 'POST':
@@ -353,8 +518,10 @@ def edit_item(request, id): #######
                         i.product.save()
 
                 except:
-                    return render(request, 'productForm.html',  {'msgErr': ' Error while updating, try again!', 'page': 'Edit', 'obj': 'Item'})
-                return render(request, 'productForm.html', {'msg': ' Item updated successfully!', 'page': 'Edit', 'obj': 'Item'})
+                    return render(request, 'productForm.html',
+                                  {'msgErr': ' Error while updating, try again!', 'page': 'Edit', 'obj': 'Item'})
+                return render(request, 'productForm.html',
+                              {'msg': ' Item updated successfully!', 'page': 'Edit', 'obj': 'Item'})
         else:
             form = EditItem(instance=Item.objects.get(id=id))
             return render(request, 'productForm.html', {'form': form, 'page': 'Edit', 'obj': 'Item', 'id': id})
@@ -362,7 +529,7 @@ def edit_item(request, id): #######
         return render(request, 'error.html')
 
 
-def list_items(request): #####
+def list_items(request):  #####
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         items = Item.objects.filter(shop=loggedShop)
@@ -371,18 +538,20 @@ def list_items(request): #####
         return render(request, 'error.html')
 
 
-def delete_item(request, id): #####
+def delete_item(request, id):  #####
     if request.user.groups.filter(name='shops').exists():
         Item.objects.get(id=id).delete()
         return redirect('items')
     return render(request, 'error.html')
 
 
-def edit_product(request, pid): #####
+def edit_product(request, pid):  #####
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         if Item.objects.filter(product_id=pid).count() > 1:
-            return render(request, 'productForm.html', {'msgErr': 'You don\'t have permissions to edit this product anymore, other shops depend on it', 'page': 'Edit', 'obj': 'Product'})
+            return render(request, 'productForm.html', {
+                'msgErr': 'You don\'t have permissions to edit this product anymore, other shops depend on it',
+                'page': 'Edit', 'obj': 'Product'})
         if request.method == 'POST':
             p = Product.objects.get(id=pid)
             form = EditProductForm(request.POST, request.FILES, instance=p)
@@ -412,7 +581,8 @@ def edit_product(request, pid): #####
                     b.save()
                     p.brand = b
                     p.save()
-                return render(request, 'productForm.html', {'msg': 'Product ' + p.name + ' updated successfully!', 'page': 'Edit', 'obj': 'Product'})
+                return render(request, 'productForm.html',
+                              {'msg': 'Product ' + p.name + ' updated successfully!', 'page': 'Edit', 'obj': 'Product'})
         else:
             p = Product.objects.get(id=pid)
             form = EditProductForm(instance=p)
@@ -421,16 +591,18 @@ def edit_product(request, pid): #####
     return render(request, 'error.html')
 
 
-def delete_product(request, pid): ######
+def delete_product(request, pid):  ######
     if request.user.groups.filter(name='shops').exists():
         if Item.objects.filter(product_id=pid).count() > 1:
-            return render(request, 'productForm.html', {'msgErr': 'You don\'t have permissions to delete this product anymore, other shops depend on it', 'page': 'Edit', 'obj': 'Product'})
+            return render(request, 'productForm.html', {
+                'msgErr': 'You don\'t have permissions to delete this product anymore, other shops depend on it',
+                'page': 'Edit', 'obj': 'Product'})
         Product.objects.get(id=pid).delete()
         return redirect('products')
     return render(request, 'error.html')
 
 
-def list_products(request): #########
+def list_products(request):  #########
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         p = Product.objects.filter(creator=loggedShop)
@@ -439,17 +611,17 @@ def list_products(request): #########
         return render(request, 'error.html')
 
 
-def list_shops(request): ######
+def list_shops(request):  ######
     shops = Shop.objects.all()
     return render(request, 'shopsList.html', {'shops': shops})
 
 
-def see_shop(request, sid): ######
+def see_shop(request, sid):  ######
     shop = Shop.objects.get(id=sid)
     return render(request, 'shopDetails.html', {'shop': shop})
 
 
-def add_shop(request): #######
+def add_shop(request):  #######
     if request.method == 'POST':
         register_form = RegisterDjangoUserForm(request.POST)
         form = AddShopForm(request.POST)
@@ -466,7 +638,6 @@ def add_shop(request): #######
             phone = form.cleaned_data['phone_number']
         else:
             return render(request, 'shopRegister.html', {'forms': [form, register_form]})
-
 
         try:
             s = Shop(owner=django_user, phone_number=phone, name=name, image='images/logo.png')
@@ -509,7 +680,8 @@ def edit_shop(request):
                     door = formA.cleaned_data['door']
 
                     # Save Adress
-                    new_address = Address(country=country, city=city, street=street, zip_code=zip_code, floor=floor,  door=door)
+                    new_address = Address(country=country, city=city, street=street, zip_code=zip_code, floor=floor,
+                                          door=door)
                     new_address.save()
                     s.address = new_address
                 else:
@@ -525,7 +697,8 @@ def edit_shop(request):
                     s.image = image
                     s.save()
 
-                return render(request, 'shopForm.html', {'msg': 'Shop ' + s.name + ' updated successfully!', 'page': 'Edit'})
+                return render(request, 'shopForm.html',
+                              {'msg': 'Shop ' + s.name + ' updated successfully!', 'page': 'Edit'})
             else:
                 return render(request, 'shopForm.html', {'msgErr': 'Error while updating!', 'page': 'Edit'})
         else:
@@ -571,11 +744,14 @@ def home_content(request):
         cache.set('categories', categories)
         cache.set('shops', shops)
 
-    return {'brands_list': brands_list.exclude(name='Other'), 'categories': categories.order_by("-totDevices").exclude(name='Other')[0:6],  # 6 categorias com mais produtos disponiveis
-            'hot_deals': hot_deals, 'new_arrivals': new_arrivals, 'all_categories': categories.exclude(name='Other'), 'shops': shops}
+    return {'brands_list': brands_list.exclude(name='Other'),
+            'categories': categories.order_by("-totDevices").exclude(name='Other')[0:6],
+            # 6 categorias com mais produtos disponiveis
+            'hot_deals': hot_deals, 'new_arrivals': new_arrivals, 'all_categories': categories.exclude(name='Other'),
+            'shops': shops}
 
 
-def product_shops(request, prod_id): ## desnecessario
+def product_shops(request, prod_id):  ## desnecessario
     product_in_wishlist = False
     product = Product.objects.get(id=prod_id)
     item_per_shop = Item.objects.filter(product=product)
@@ -592,7 +768,7 @@ def product_shops(request, prod_id): ## desnecessario
         else:
             request.session['viewed'] = [product.id]
 
-    #del request.session['viewed']
+    # del request.session['viewed']
 
     return render(request, 'product-sidebar.html',
                   {'prod': product, 'wishlist': product_in_wishlist, 'prod_per_shop': item_per_shop})
@@ -616,12 +792,14 @@ def order_product(request, item_id):
         else:
             order_form = DoOrderForm(initial={'qty': 1})
 
-        return render(request, 'DoOrder.html', {'item': item, 'order_form': order_form, 'error_address': error_address, 'error_qty': error_qty, 'success': success})
+        return render(request, 'DoOrder.html',
+                      {'item': item, 'order_form': order_form, 'error_address': error_address, 'error_qty': error_qty,
+                       'success': success})
     else:
         return redirect(request.META['HTTP_REFERER'])  # Redirect to previous url
 
 
-def proccess_order(user,item, qty, payment_meth):
+def proccess_order(user, item, qty, payment_meth):
     success = error_qty = error_address = False
     if user.address:
         if item.stock > qty:
@@ -741,7 +919,6 @@ def cart(request):
             ids = request.POST.getlist('item_id[]')
             qtys = request.POST.getlist('qty[]')
 
-
             # Buy All Products
             for x in range(len(ids)):
                 item_id = ids[x]
@@ -789,7 +966,7 @@ def wishlist(request):
             items = Item.objects.filter(product=prod)
             qtys = [item.stock for item in items]
 
-            if qtys and max(qtys)>0:
+            if qtys and max(qtys) > 0:
                 has_stock = True
             else:
                 has_stock = False
@@ -801,9 +978,9 @@ def wishlist(request):
     else:
         return HttpResponseRedirect('/login')
 
+
 class AccountSignupView(SignupView):
     template_name = "login.html"
 
 
 account_signup_view = AccountSignupView.as_view()
-

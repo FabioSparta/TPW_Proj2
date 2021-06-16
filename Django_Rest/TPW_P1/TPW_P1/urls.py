@@ -4,14 +4,38 @@ from django.urls import path, include
 from TPW_P1 import settings
 from TechSekai import views
 from django.contrib.auth import views as auth_views
-
+from rest_framework.authtoken.views import obtain_auth_token
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    ## REST ENDPOINTS
-    path('api/prods/search', views.get_prods),
+    ########## REST ENDPOINTS #############
 
-    ############
+    # General
+    #path('api/prods/all',                        views.get_prods_all),
+    path('api/prods/hotdeals',                    views.get_prods_hotdeals),
+    path('api/prods/newarrivals',                 views.get_prods_newarrivals),
+
+    # User
+    path('api/account/signup',                     views.sign_up),
+    path('api/account/login',                      obtain_auth_token),
+    path('api/account/info',                       views.get_user_info),
+    path('api/account/address/add',                views.user_address_add),
+    path('api/account/address/update',             views.user_address_update),
+    path('api/account/address/rem',                views.user_address_rem),
+
+    path('api/account/cart',                       views.get_cart),
+    path('api/account/wishlist',                   views.get_wishlist),
+    path('api/account/wishlist/add',               views.wishlist_add),
+    path('api/account/wishlist/rem/<int:prod_id>', views.wishlist_remove),
+
+
+    # Shops
+
+    ################################
+
+
+
+
 
     # GENERAL PAGES
     path('', views.home, name='home'),

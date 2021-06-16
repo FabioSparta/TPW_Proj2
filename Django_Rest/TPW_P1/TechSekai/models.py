@@ -1,7 +1,10 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import models as auth_models
-
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 GENDER = [
     ('M', 'Male'),
     ('F', 'Female'),
@@ -45,7 +48,7 @@ class User(models.Model):
     age = models.PositiveIntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)], null=True, blank=True)
     phone_number = models.PositiveBigIntegerField(null=True, blank=True)
     avatar = models.ImageField(null=True, blank=True, upload_to='images/')
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __unicode__(self):
         return self.django_user.username
@@ -144,3 +147,9 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.django_user.first_name + ", item: " + self.item.product.name
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

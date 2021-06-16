@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'TechSekai.apps.TechsekaiConfig',
+    'rest_framework.authtoken',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -57,6 +58,21 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Django Rest Framework Config
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+}
+# CORS (Cross-Origin Resource Sharing) config
+CORS_ORIGIN_ALLOW_ALL = True
+
+
 
 ROOT_URLCONF = 'TPW_P1.urls'
 
@@ -157,11 +173,3 @@ SITE_ID = 3
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Django Rest Framework Config
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES' : [
-        'rest_framework.permissions.AllowAny'
-    ]
-}
-# CORS (Cross-Origin Resource Sharing) config
-CORS_ORIGIN_ALLOW_ALL = True
