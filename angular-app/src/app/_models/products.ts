@@ -1,6 +1,6 @@
-import {Category} from "../categories/category";
+import {Category} from "./category";
 import {Brand} from "../brands/brand";
-import {Shop} from "../shops/shop";
+import {Shop} from "./shop";
 
 export class Product{
   id?: number;

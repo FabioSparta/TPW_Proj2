@@ -30,6 +30,7 @@ global_products = []
 
 @api_view(['GET'])
 def get_prods_hotdeals(request):
+    print("heeeeeeee")
     products = Product.objects.all().order_by("-qty_sold")[0:10]  # Only {10} most sold
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

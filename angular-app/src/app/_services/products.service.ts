@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Product} from "./products";
+import {Product} from "../_models/products";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {REST_API_BASE_URL} from "../GlobalVars";
@@ -11,6 +11,7 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
+
 export class ProductsService {
   private baseURL= REST_API_BASE_URL + "/prods"
 

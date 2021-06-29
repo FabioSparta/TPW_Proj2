@@ -7,7 +7,7 @@
           <i class="icon-bars"></i>
         </button>
 
-        <a href="{% url 'home' %}" class="logo">
+        <a href="home" class="logo">
           <img src="assets/img/cut_logo.png" alt="TechSekai" width="220" height="50px">
         </a>
       </div>
@@ -112,16 +112,16 @@
           <ul class="menu sf-arrows">
             <!--DJANGO
           {% if not request.user|has_group:"shops" %} -->
-          <li class="megamenu-container {% if '/' == request.path %} active {% endif %}">
-            <a href="{% url 'home' %}" class="">Home</a>
+          <li class="megamenu-container">
+            <a href="home" class="" [routerLinkActive]="['is-active']">Home</a>
             <div class=""></div><!-- End .megamenu -->
             </li>
-            <li class="megamenu-container {% if '/hot_deals/' == request.path %} active {% endif %}">
-              <a href="hotdeals" class="">Hot Deals</a>
+            <li class="megamenu-container ">
+              <a href="hotdeals" class="" [routerLinkActive]="['is-active']">Hot Deals</a>
               <div class=""></div><!-- End .megamenu -->
             </li>
-            <li class="megamenu-container {% if '/new_arrivals/' == request.path %} active {% endif %}">
-              <a href="newarrivals" class="">Newly Arrived</a>
+            <li class="megamenu-container">
+              <a href="newarrivals" class="" [routerLinkActive]="['is-active']">Newly Arrived</a>
               <div class=""></div><!-- End .megamenu -->
             </li>
             <li class="megamenu-container">

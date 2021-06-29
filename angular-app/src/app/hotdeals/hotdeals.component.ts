@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Product} from "../products/products";
-import {ProductsService} from "../products/products.service";
+import {Product} from "../_models/products";
+import {ProductsService} from "../_services/products.service";
 
 @Component({
   selector: 'app-hotdeals',
@@ -8,14 +8,20 @@ import {ProductsService} from "../products/products.service";
   styleUrls: ['./hotdeals.component.css']
 })
 export class HotdealsComponent implements OnInit {
+
   products : Product[] | undefined;
-  constructor(private productService: ProductsService) { }
+  abc : string
+  constructor(private productService: ProductsService) {
+    this.abc= "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+  }
 
   ngOnInit(): void {
     this.getHotDeals();
   }
 
   getHotDeals():void{
-    this.productService.getHotDeals().subscribe(products=> this.products = products);
+    this.productService.getHotDeals().subscribe(products=> {
+      this.products = products;
+    });
   }
 }

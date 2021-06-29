@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {User} from "../user-profile/user";
+import {User} from "../_models/user";
 import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from "@angular/router";
+import {AlertService} from "../_services/alert.service";
+import {AuthService} from "../_services/auth.service";
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'app-sign-in-up',
@@ -10,12 +13,14 @@ import {Router} from "@angular/router";
   styleUrls: ['./sign-in-up.component.css']
 })
 export class SignInUpComponent implements OnInit {
-  loginError = false;
   loginForm: FormGroup;
   loading = false;
   submitted = false;
 
-  constructor( private formBuilder: FormBuilder, private router: Router) {
+  constructor( private formBuilder: FormBuilder,
+               private router: Router,
+               private authService: AuthService,
+               private alertService: AlertService ) {
     //Login Form
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required, Validators.maxLength(20)],
@@ -23,7 +28,12 @@ export class SignInUpComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
 
   // Getter for form fields
   get f(): any { return this.loginForm.controls; }
@@ -31,11 +41,28 @@ export class SignInUpComponent implements OnInit {
 
   onLogin(): void {
     this.submitted = true;
+
+    // reset alerts on submit
+    this.alertService.clear();
+
+    // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
+
     this.loading = true;
-   // TODO: call authentication service here
+    this.authService.signIn(this.f.username.value, this.f.password.value)
+      .pipe(first())
+      .subscribe(
+        data => {
+          localStorage.setItem('userToken', data.token); // Save Token
+          this.router.navigate(['/']);
+          this.loading = false;
+        },
+        error => {
+          this.alertService.error(error);
+          this.loading = false;
+        });
   }
 
 }

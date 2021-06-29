@@ -1,5 +1,146 @@
 <div class="page-wrapper">
 <app-navbar></app-navbar>
-<h1>HOME PAGE</h1>
+
+
+  <div class="intro-slider-container">
+    <div class="intro-slider owl-carousel owl-simple owl-nav-inside" data-toggle="owl" data-owl-options='{
+                "nav": false,
+                "responsive": {
+                    "992": {
+                        "nav": true
+                    }
+                }
+            }'>
+      <div class="intro-slide" style="background-image: url('assets/img/13/slider/slide-1.png');">
+        <div class="container intro-content">
+          <div class="row">
+            <div class="col-auto offset-lg-3 intro-col">
+              <h3 class="intro-subtitle">Trade-In Offer</h3><!-- End .h3 intro-subtitle -->
+              <h1 class="intro-title">MacBook Air <br>Latest Model
+                <span>
+                                    <sup class="font-weight-light">from</sup>
+                                    <span class="text-primary">$999<sup>,99</sup></span>
+                                </span>
+              </h1><!-- End .intro-title -->
+            </div><!-- End .col-auto offset-lg-3 -->
+          </div><!-- End .row -->
+        </div><!-- End .container intro-content -->
+      </div><!-- End .intro-slide -->
+    </div><!-- End .owl-carousel owl-simple -->
+
+    <span class="slider-loader"></span><!-- End .slider-loader -->
+  </div><!-- End .intro-slider-container -->
+
+  <div class="mb-4"></div><!-- End .mb-2 -->
+
+  <div class="container">
+    <!--{% if categories and not request.user|has_group:"shops" %}-->
+    <h2 class="title text-center mb-2">Explore Popular Categories</h2><!-- End .title -->
+    <div class="cat-blocks-container">
+      <div class="row">
+        <!-- {% for c in categories %
+        <div class="col-6 col-sm-4 col-lg-2">
+          <a href="search/category/{{ c.name }}/" class="cat-block">
+            <figure>
+                            <span>
+                                <img src="/media/{{ c.image }}" alt="Category image">
+                            </span>
+            </figure>
+            <h3 class="cat-block-title"> {{ c.name }}</h3>-->
+            <!-- End .cat-block-title -->
+         <!-- </a>
+        </div>--><!-- End .col-sm-4 col-lg-2 -->
+        <!--{% endfor %} -->
+      </div><!-- End .row -->
+    </div><!-- End .cat-blocks-container -->
+   <!-- {% endif %}-->
+  </div><!-- End .container -->
+
+  <!--{% if brands_list and not request.user|has_group:"shops"%}-->
+  <div class="container">
+    <h2 class="title title-border mb-5">Shop by Brands</h2><!-- End .title -->
+    <div class="owl-carousel mb-5 owl-simple" data-toggle="owl"
+         data-owl-options='{
+            "nav": false,
+            "dots": true,
+            "margin": 30,
+            "loop": false,
+            "responsive": {
+                "0": {
+                    "items":2
+                },
+                "420": {
+                    "items":3
+                },
+                "600": {
+                    "items":4
+                },
+                "900": {
+                    "items":5
+                },
+                "1024": {
+                    "items":6
+                },
+                "1280": {
+                    "items":6,
+                    "nav": true,
+                    "dots": false
+                }
+            }
+        }'>
+
+      <!--{%  for brand in brands_list %}
+      <a href="search/brand/{{ brand.name }}/" class="brand" style="background: #23272b;">
+        <p style="color: whitesmoke"> {{ brand.name }}</p>
+      </a>
+      {% endfor %} -->
+    </div><!-- End .owl-carousel -->
+  </div><!-- End .container -->
+ <!-- {% endif %}-->
+
+  <!--{% if shops and not request.user|has_group:"shops"%} -->
+  <div class="container">
+    <h2 class="title title-border mb-5">Shop by Store</h2><!-- End .title -->
+    <div class="owl-carousel mb-5 owl-simple" data-toggle="owl"
+         data-owl-options='{
+                "nav": false,
+                "dots": true,
+                "margin": 30,
+                "loop": false,
+                "responsive": {
+                    "0": {
+                        "items":2
+                    },
+                    "420": {
+                        "items":3
+                    },
+                    "600": {
+                        "items":4
+                    },
+                    "900": {
+                        "items":5
+                    },
+                    "1024": {
+                        "items":6
+                    },
+                    "1280": {
+                        "items":6,
+                        "nav": true,
+                        "dots": false
+                    }
+                }
+            }'>
+      <!--
+      {%  for shop in shops %}
+      <a href="search/shop/{{ shop.name }}/" style="text-align: center">
+        <img src="/media/{{ shop.image }}" alt="{{ shop.name }}">
+        <p style="color: black"> {{ shop.name }}</p>
+      </a>
+      {% endfor %}
+      -->
+    </div><!-- End .owl-carousel -->
+  </div><!-- End .container -->
+
+
 <app-footer></app-footer>
 </div>

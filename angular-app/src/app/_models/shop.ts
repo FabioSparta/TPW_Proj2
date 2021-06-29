@@ -1,4 +1,4 @@
-import {User} from "../user-profile/user";
+import {User} from "./user";
 
 export class Shop {
   name?: string ;

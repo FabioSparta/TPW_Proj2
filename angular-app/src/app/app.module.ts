@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import { NavbarComponent } from './_common/navbar/navbar.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { ShopsComponent } from './shops/shops.component';
+import { ShopsComponent } from './_models/shops.component';
 import { BrandsComponent } from './brands/brands.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { ProductsComponent } from './products/products.component';
@@ -18,6 +18,8 @@ import { HotdealsComponent } from './hotdeals/hotdeals.component';
 import { NewarrivalsComponent } from './newarrivals/newarrivals.component';
 import { SignInUpComponent } from './sign-in-up/sign-in-up.component';
 import { HomeComponent } from './home/home.component';
+import { ShopsCarouselComponent } from './shops-carousel/shops-carousel.component';
+import { AlertComponent } from './_common/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { HomeComponent } from './home/home.component';
     HotdealsComponent,
     NewarrivalsComponent,
     SignInUpComponent,
-    HomeComponent
+    HomeComponent,
+    ShopsCarouselComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
