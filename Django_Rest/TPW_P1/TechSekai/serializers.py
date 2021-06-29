@@ -41,11 +41,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
         fields = '__all__'
+        read_only_fields = ['id', 'owner']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -64,12 +64,15 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+        read_only_fields = ['id', ] #'creator'
+        print(Product.name)
 
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = '__all__'
+        read_only_fields = ['id']
 
 
 class CartSerializer(serializers.ModelSerializer):
