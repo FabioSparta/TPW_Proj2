@@ -14,6 +14,8 @@ urlpatterns = [
     #path('api/prods/all',                        views.get_prods_all),
     path('api/prods/hotdeals',                    views.get_prods_hotdeals),
     path('api/prods/newarrivals',                 views.get_prods_newarrivals),
+    path('api/prods/search', views.search),
+    path('api/prods/search2/<str:filter>/<str:value>', views.search2),
 
     # User
     path('api/account/signup',                     views.sign_up),
@@ -27,6 +29,9 @@ urlpatterns = [
     path('api/account/wishlist',                   views.get_wishlist),
     path('api/account/wishlist/add',               views.wishlist_add),
     path('api/account/wishlist/rem/<int:prod_id>', views.wishlist_remove),
+    path('api/account/order', views.order_product),    #Maybe tweak this to allow buy from here
+    path('api/account/cart/add/<int:item_id>', views.add_to_Cart),   #test
+    path('api/account/cart/rem/<int:item_id>', views.rem_from_Cart), #test
 
     #products
     path('api/products/', views.list_prods),
@@ -51,6 +56,11 @@ urlpatterns = [
     path('api/shops/<int:sid>', views.get_shop),
     path('api/shops/create', views.create_shop), #POR IMPLEMENTAR
     path('api/shops/delete', views.shop_delete),
+    path('api/shops/edit', views.edit_shop), #POR IMPLEMENTAR
+
+    path('api/home', views.home_content),
+    path('api/shop/products/<int:prod_id>', views.product_shops), #Use? Test
+
     ################################
 
 
