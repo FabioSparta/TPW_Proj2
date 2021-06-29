@@ -28,9 +28,29 @@ urlpatterns = [
     path('api/account/wishlist/add',               views.wishlist_add),
     path('api/account/wishlist/rem/<int:prod_id>', views.wishlist_remove),
 
+    #products
+    path('api/products/', views.list_prods),
+    path('api/products/create', views.create_product),
+    path('api/products/edit/<int:pid>', views.update_product),
+    path('api/products/<int:pid>', views.see_product),
+    path('api/products/delete/<int:pid>', views.delete_prod),
+
+    #items
+    path('api/items/', views.get_list_items),
+    path('api/items/create', views.create_item),
+    path('api/items/<int:id>', views.see_item),
+    path('api/items/edit/<int:id>', views.update_item),
+    path('api/items/delete/<int:id>', views.item_delete),
+
+    #brands and categories
+    path('api/brands/', views.list_brands),
+    path('api/categories/', views.list_categories),
 
     # Shops
-
+    path('api/shops/', views.get_shops_list),
+    path('api/shops/<int:sid>', views.get_shop),
+    path('api/shops/create', views.create_shop), #POR IMPLEMENTAR
+    path('api/shops/delete', views.shop_delete),
     ################################
 
 

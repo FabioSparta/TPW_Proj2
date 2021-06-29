@@ -2,14 +2,12 @@ from django.core.cache import cache
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
 from TechSekai.forms import *
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from allauth.account.views import SignupView
 import json
-from types import SimpleNamespace
 
 # Imports for Django
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -70,12 +68,14 @@ def sign_up(request):
 
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_info(request):
     user = User.objects.get(django_user=request.user)
     serializer = UserSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -89,6 +89,7 @@ def user_address_add(request):
         return Response("Address updated successfully.", status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_201_CREATED)
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -105,6 +106,7 @@ def user_address_update(request):
 
     return Response(serializer.errors, status=status.HTTP_201_CREATED)
 
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def user_address_rem(request):
@@ -115,10 +117,6 @@ def user_address_rem(request):
         return Response("Address removed successfully.", status=status.HTTP_204_NO_CONTENT)
 
     return Response("This User does not have an address yet. ", status=status.HTTP_404_NOT_FOUND)
-
-
-
-
 
 
 @api_view(['GET'])
@@ -181,6 +179,337 @@ def wishlist_remove(request, prod_id):
 
     return Response("There is no " + prod.name + " in your wishlist.", status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+def list_categories(request):
+    cats = Category.objects.all()
+    serializer = CategorySerializer(cats, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def list_brands(request):
+    brands = Brand.objects.all()
+    serializer = BrandSerializer(brands, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_prods(request):
+    if request.user.groups.filter(name='shops').exists():
+        loggedShop = Shop.objects.get(owner=request.user)
+        p = Product.objects.filter(creator=loggedShop)
+        if 'num' in request.GET:
+            num = int(request.GET['num'])
+            p = p[:num]
+        serializer = ProductSerializer(p, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response("Must login with a shop account to list products", status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_product(request):
+    if request.user.groups.filter(name='shops').exists():
+        loggedShop = Shop.objects.get(owner=request.user)
+
+        serializer = ProductSerializer(data=request.data)
+
+        if serializer.is_valid():
+            prod = serializer.save()
+            prod.creator = loggedShop
+
+            if prod.image is None:
+                prod.image = 'images/logo.png'
+
+            if prod.brand.name == 'Other':
+                new_brand = request.data.get("new_brand")
+                if new_brand is not None:
+                    b = Brand(name=new_brand)
+                    b.save()
+                    prod.brand = b
+                else:
+                    Product.objects.get(id=prod.id).delete()
+                    return Response("New brand not created because no new_brand was defined",
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+            if prod.category.name == 'Other':
+                new_cat = request.data.get("new_cat")
+                if new_cat is not None:
+                    c = Category(name=new_cat, totDevices=1)
+                    c.save()
+                    prod.category = c
+                else:
+                    Product.objects.get(id=prod.id).delete()
+                    return Response("New category not created because no new_category was defined",
+                                    status=status.HTTP_400_BAD_REQUEST)
+            else:
+                prod.category.totDevices += 1
+
+            try:
+                price = request.data.get("price")
+                i = Item(product=prod, price=price, shop=loggedShop)
+                i.price = price
+                i.save()
+                if i.price < prod.lowest_price:
+                    prod.lowest_price = i.price
+
+            except:
+                Product.objects.get(id=prod.id).delete()
+                return Response("Something went wrong: check if you defined the product price",
+                                status=status.HTTP_400_BAD_REQUEST)
+
+            prod.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    return Response("You must login with a shop account!", status=status.HTTP_403_FORBIDDEN)
+
+# TODO: VER IMAGENS https://www.trell.se/blog/file-uploads-json-apis-django-rest-framework/
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_product(request, pid):
+    if request.user.groups.filter(name='shops').exists():
+        loggedShop = Shop.objects.get(owner=request.user)
+        if Item.objects.filter(product_id=pid).count() > 1:
+            return Response('You don\'t have permissions to edit this product anymore, other shops depend on it',
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
+        try:
+            p = Product.objects.get(id=pid)
+            if p.creator != loggedShop:
+                return Response('You arent the creator of this product, so you can\'t edit it. ',
+                                status=status.HTTP_403_FORBIDDEN)
+        except Product.DoesNotExist:
+            return Response("Product not found", status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProductSerializer(p, data=request.data)
+
+        if serializer.is_valid():
+            p = serializer.save()
+            p.creator = loggedShop
+
+            price = request.data.get("price")
+            if price is not None:
+                try:
+                    i = Item.objects.get(product=p)
+                    i.price = price
+                    i.save()
+                    if i.price < p.lowest_price:
+                        p.lowest_price = i.price
+                        p.save()
+
+                except:
+                    return Response("Something went wrong: product price not updated",
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+            print(p.image)
+            if p.image is None:
+                print('hereeeeeeeeeeeeeee')
+                image = 'images/logo.png'
+                p.image = image
+                p.save()
+
+            if p.category.name == 'Other':
+                new_cat = request.data.get("new_cat")
+                if new_cat is not None:
+                    c = Category(name=new_cat, totDevices=1)
+                    c.save()
+                    p.category = c
+                    p.save()
+                else:
+                    return Response("New category not created because no new_category was defined",
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+            if p.brand.name == 'Other':
+                new_brand = request.data.get("new_brand")
+                if new_brand is not None:
+                    b = Brand(name=new_brand)
+                    b.save()
+                    p.brand = b
+                    p.save()
+                else:
+                    return Response("New brand not created because no new_brand was defined",
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    return Response("Must login with a shop account to edit products", status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(['GET'])
+def see_product(request, pid):
+    try:
+        prod = Product.objects.get(id=pid)
+    except Product.DoesNotExist:
+        return Response('Product not found', status=status.HTTP_404_NOT_FOUND)
+    serializer = ProductSerializer(prod)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_prod(request, pid):
+    if request.user.groups.filter(name='shops').exists():
+        if Item.objects.filter(product_id=pid).count() > 1:
+            return Response('You don\'t have permissions to delete this product anymore, other shops depend on it. Maybe you should delete the corresponding item instead',
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
+        Product.objects.get(id=pid).delete()
+        return Response('Product deleted successfully', status=status.HTTP_204_NO_CONTENT)
+    return Response("Must login with a shop account to delete products", status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(['GET'])
+def get_shops_list(request):
+    shops = Shop.objects.all()
+    if 'num' in request.GET:
+        num = int(request.GET['num'])
+        shops = shops[:num]
+    serializer = ShopSerializer(shops, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_shop(request, sid):
+    try:
+        shop = Shop.objects.get(id=sid)
+    except Shop.DoesNotExist:
+        return Response('Shop not found', status=status.HTTP_404_NOT_FOUND)
+    serializer = ShopSerializer(shop)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+## TODO: FEITO IG
+@api_view(['POST'])
+def create_shop(request):
+    serializer = RegistrationSerializer(data=request.data)
+
+    if serializer.is_valid():
+        # Save DjangoAuth User
+        django_user = serializer.save()
+
+        shopName = request.data.get("shopName")
+        if shopName is not None:
+            # Save App User
+            u = User()
+            u.django_user = django_user
+
+            s = Shop(owner=django_user, name=shopName, image='images/logo.png')
+            s.save()
+
+            my_group = Group.objects.get(name='shops')
+            my_group.user_set.add(django_user)
+
+        else:
+            return Response("Something went wrong: shop name not defined",status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'response': "Successfully registered the new shop.", 'email': u.django_user.email,
+                         'username': u.django_user.username, 'token': Token.objects.get(user=django_user).key},
+                        status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+#NOT WORKING
+@permission_classes([IsAuthenticated])
+def shop_delete(request):
+    if request.user.groups.filter(name='shops').exists():
+        Shop.objects.get(owner__email=request.user.email).delete()
+        return Response('Account deleted successfully', status=status.HTTP_204_NO_CONTENT)
+    return Response('You don\'t have permissions to delete this account', status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_list_items(request):
+    if request.user.groups.filter(name='shops').exists():
+        loggedShop = Shop.objects.get(owner=request.user)
+        items = Item.objects.filter(shop=loggedShop)
+        if 'num' in request.GET:
+            num = int(request.GET['num'])
+            items = items[:num]
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response('You don\'t have permissions to list items, login with shop account in order to do that',
+                    status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+@api_view(['GET'])
+def see_item(request, id):
+    try:
+        item = Item.objects.get(id=id)
+    except Item.DoesNotExist:
+        return Response('Item not found', status=status.HTTP_404_NOT_FOUND)
+    serializer = ItemSerializer(item)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_item(request):
+    if request.user.groups.filter(name='shops').exists():
+        loggedShop = Shop.objects.get(owner=request.user)
+        serializer = ItemSerializer(data=request.data)
+
+        if serializer.is_valid():
+            item = serializer.save()
+            item.shop = loggedShop
+
+            if item.price < item.product.lowest_price:
+                item.product.lowest_price = item.price
+                item.product.save()
+
+            item.product.lowest_price = min([x.product.lowest_price for x in Item.objects.filter(product=item.product)])
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+    return Response('You don\'t have permissions to list items, login with shop account in order to do that',
+                    status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_item(request, id):
+    if request.user.groups.filter(name='shops').exists():
+        loggedShop = Shop.objects.get(owner=request.user)
+
+        try:
+            i = Item.objects.get(id=id)
+            if i.shop != loggedShop:
+                return Response('You arent the creator of this item, so you can\'t edit it. ',
+                                status=status.HTTP_403_FORBIDDEN)
+        except Item.DoesNotExist:
+            return Response("Item not found", status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ItemSerializer(i, data=request.data)
+
+        if serializer.is_valid():
+            item = serializer.save()
+
+            if item.price < item.product.lowest_price:
+                item.product.lowest_price = item.price
+                item.product.save()
+
+            item.product.lowest_price = min([x.product.lowest_price for x in Item.objects.filter(product=item.product)])
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+    return Response('You don\'t have permissions to list items, login with shop account in order to do that',
+                    status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def item_delete(request, id):
+    if request.user.groups.filter(name='shops').exists():
+        Item.objects.get(id=id).delete()
+        return Response('Item deleted successfully', status=status.HTTP_204_NO_CONTENT)
+    return Response('You don\'t have permissions to delete this item', status=status.HTTP_406_NOT_ACCEPTABLE)
 
 # ######################################################################################################################
 
