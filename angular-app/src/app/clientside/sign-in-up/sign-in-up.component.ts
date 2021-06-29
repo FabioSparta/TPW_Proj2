@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {User} from "../_models/user";
+import {User} from "../../_models/user";
 import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from "@angular/router";
-import {AlertService} from "../_services/alert.service";
-import {AuthService} from "../_services/auth.service";
+import {AlertService} from "../../_services/alert.service";
+import {AuthService} from "../../_services/auth.service";
 import {first} from "rxjs/operators";
 
 @Component({
@@ -56,8 +56,8 @@ export class SignInUpComponent implements OnInit {
       .subscribe(
         data => {
           localStorage.setItem('userToken', data.token); // Save Token
-          this.router.navigate(['/']);
           this.loading = false;
+          this.router.navigate(['/']);
         },
         error => {
           this.alertService.error(error);

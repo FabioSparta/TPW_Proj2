@@ -1,5 +1,5 @@
 import {Category} from "./category";
-import {Brand} from "../brands/brand";
+import {Brand} from "../clientside/brands/brand";
 import {Shop} from "./shop";
 
 export class Product{

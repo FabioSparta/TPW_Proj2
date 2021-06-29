@@ -1,4 +1,4 @@
-import {Address} from "../user-profile/address";
+import {Address} from "../clientside/user-profile/address";
 
 export class User{
   id: number | undefined;
