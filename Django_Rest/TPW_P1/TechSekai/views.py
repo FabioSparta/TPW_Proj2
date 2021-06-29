@@ -28,7 +28,6 @@ global_products = []
 
 @api_view(['GET'])
 def get_prods_hotdeals(request):
-    print("heeeeeeee")
     products = Product.objects.all().order_by("-qty_sold")[0:10]  # Only {10} most sold
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -584,6 +583,7 @@ def hot_deals(request):  #########
     return render(request, 'new_hot_items.html', content)
 
 
+@api_view(['GET'])
 def search(request):  ##########
     if 'name' in request.get_full_path():
         name = request.GET['name']
@@ -615,9 +615,13 @@ def search(request):  ##########
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         products = paginator.page(paginator.num_pages)
-    return render(request, 'prodsList.html', {'products': products})
 
+    #This is returning with the paginator... Idk if this works well...
+    #If errors => (return global_products and do the pagination in angular)
+    serializer = ProductSerializer(products,many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
 def search2(request, filter, value):  ######
     if filter == 'category':
         f_products = Product.objects.filter(category__name__icontains=value)
@@ -636,7 +640,11 @@ def search2(request, filter, value):  ######
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         products = paginator.page(paginator.num_pages)
-    return render(request, 'prodsList.html', {'products': products})
+
+    # This is returning with the paginator... Idk if this works well...
+    # If errors => (return f_products and do the pagination in angular)
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 def account_page(request):  #######
@@ -1052,6 +1060,7 @@ def delete_shop(request):
     return render(request, 'error.html')
 
 
+@api_view(['GET'])
 def home_content(request):
     brands_list = cache.get('brands_list')
     hot_deals = cache.get('hot_deals')
@@ -1074,14 +1083,29 @@ def home_content(request):
         cache.set('categories', categories)
         cache.set('shops', shops)
 
-    return {'brands_list': brands_list.exclude(name='Other'),
-            'categories': categories.order_by("-totDevices").exclude(name='Other')[0:6],
-            # 6 categorias com mais produtos disponiveis
-            'hot_deals': hot_deals, 'new_arrivals': new_arrivals, 'all_categories': categories.exclude(name='Other'),
-            'shops': shops}
+    serializer = BrandSerializer(brands_list.exclude(name='Other'), many=True)
+    serializer2 = CategorySerializer(categories.order_by("-totDevices").exclude(name='Other')[0:6], many=True)
+    serializer3 = ProductSerializer(hot_deals, many=True)
+    serializer4 = ProductSerializer(new_arrivals, many=True)
+    serializer5 = CategorySerializer(categories.exclude(name='Other'), many=True)
+    serializer6 = ShopSerializer(shops, many=True)
 
 
-def product_shops(request, prod_id):  ## desnecessario
+    data = {
+            'brands_list': serializer.data,
+            'categories': serializer2.data,
+            'hot_deals': serializer3.data,
+            'new_arrivals': serializer4.data,
+            'all_categories': serializer5.data,
+            'shops': serializer6.data
+            }
+
+    return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def product_shops(request, prod_id):
     product_in_wishlist = False
     product = Product.objects.get(id=prod_id)
     item_per_shop = Item.objects.filter(product=product)
@@ -1098,35 +1122,44 @@ def product_shops(request, prod_id):  ## desnecessario
         else:
             request.session['viewed'] = [product.id]
 
-    # del request.session['viewed']
+    serializer = ProductSerializer(product, many=True)
+    serializer2 = ItemSerializer(item_per_shop, many=True)
 
-    return render(request, 'product-sidebar.html',
-                  {'prod': product, 'wishlist': product_in_wishlist, 'prod_per_shop': item_per_shop})
+    data = {
+        'prod': serializer.data,
+        'wishlist': product_in_wishlist,
+        'prod_per_shop': serializer2.data
+    }
+
+    return Response(data, status=status.HTTP_200_OK)
 
 
-def order_product(request, item_id):
+@api_view(['POST'])
+def order_product(request):
     if request.user.is_authenticated:
         error_address = error_qty = success = False
-        item = Item.objects.get(id=item_id)
+        serializer = OrderSerializer(data=request.data)
+        user = User.objects.get(django_user=request.user)
+        if serializer.is_valid():
+            if user.address:
+                order = serializer.save()
+                if order.item.stock > order.quantity:
+                    order.total_price = order.quantity * order.item.price
+                    order.item.stock = order.item.stock - order.quantity
+                    order.save()
+                    # Remove from Cart if it was there
+                    user_cart = Cart.objects.get(user=user)
+                    cart_item = Cart_Item.objects.filter(cart=user_cart, item=item)
+                    if cart_item[0].item == item:
+                        cart_item[0].delete()
 
-        if request.method == 'POST':
-            order_form = DoOrderForm(request.POST)
-
-            if order_form.is_valid():
-                # Ready Info
-                user = User.objects.get(django_user=request.user)
-                qty = order_form.cleaned_data['qty']
-                payment_meth = order_form.cleaned_data['payment_meth']
-
-                success, error_qty, error_address = proccess_order(user, item, qty, payment_meth)
-        else:
-            order_form = DoOrderForm(initial={'qty': 1})
-
-        return render(request, 'DoOrder.html',
-                      {'item': item, 'order_form': order_form, 'error_address': error_address, 'error_qty': error_qty,
-                       'success': success})
+                    return Response(data=serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response("There's not enough quantity of the product you're trying to buy!",status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response("Please add an address first!",status=status.HTTP_400_BAD_REQUEST)
     else:
-        return redirect(request.META['HTTP_REFERER'])  # Redirect to previous url
+        return Response("You must login first to order a product", status=status.HTTP_403_FORBIDDEN)
 
 
 def proccess_order(user, item, qty, payment_meth):
@@ -1154,6 +1187,8 @@ def proccess_order(user, item, qty, payment_meth):
     return success, error_qty, error_address
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def add_to_Cart(request, item_id):
     if request.user.is_authenticated:
         user = User.objects.get(django_user=request.user)
@@ -1179,12 +1214,12 @@ def add_to_Cart(request, item_id):
         user_cart.total_price = new_total
         user_cart.save()
 
-        return redirect(request.META['HTTP_REFERER'])  # redirect to previous url
+        return Response("Added item(s) to cart", status=status.HTTP_200_OK)
     else:
-        # Maybe later, save cart items in cache when not authenticated?
-        return redirect(request.META['HTTP_REFERER'])  # Redirect to previous url
+        return Response("You must login first to add to cart", status=status.HTTP_403_FORBIDDEN)
 
-
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def rem_from_Cart(request, item_id):
     if request.user.is_authenticated:
         user = User.objects.get(django_user=request.user)
@@ -1194,7 +1229,9 @@ def rem_from_Cart(request, item_id):
         cart_items = Cart_Item.objects.filter(cart=user_cart, item=item)
         if len(cart_items) > 0:
             cart_items[0].delete()
-    return redirect(request.META['HTTP_REFERER'])  # Redirect to previous url
+        return Response("Removed item(s) from the cart", status=status.HTTP_200_OK)
+    else:
+        return Response("You must login first to use the cart", status=status.HTTP_403_FORBIDDEN)
 
 
 def add_to_Wishlist(request, prod_id):
