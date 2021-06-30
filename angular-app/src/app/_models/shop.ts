@@ -1,13 +1,20 @@
 import {User} from "./user";
+import {Address} from "./address";
+import {Time} from "@angular/common";
 
 export class Shop {
-  name?: string ;
-  owner?: User;
-  phone_number?: string;
-  address?: string;
+  id: number;
+  name: string ;
+  owner: User;
+  phone_number?: bigint;
+  address?: Address;
   website?: string;
-  opening_hours?: string;
+  opening_hours?: Time;
+  image?: File; //maybe string
 
-  image?: File; // string for url..File for input element
-
+  constructor(id:number ,name:string, owner:User) {
+    this.id = id;
+    this.name = name;
+    this.owner = owner;
+  }
 }

@@ -1,13 +1,19 @@
-import {Address} from "../clientside/user-profile/address";
+import {Address} from "./address";
 
 export class User{
-  id: number | undefined;
-  address: Address | undefined;
-  email: string | undefined;
-  username: string | undefined;
-  first_name:string | undefined;
-  last_name:string | undefined;
-  gender:string | undefined;
-  age:number | undefined;
-  phone_number:string | undefined;
+  id: number;
+  address?: Address;
+  email: string;
+  username: string;
+  first_name?: string;
+  last_name?: string;
+  gender?:string;
+  age?: number;
+  phone_number?: bigint;
+
+  constructor(id: number, email: string, username: string) {
+    this.id = id;
+    this.email = email;
+    this.username = username;
+  }
 }
