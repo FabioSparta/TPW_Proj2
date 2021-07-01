@@ -158,11 +158,12 @@ def get_wishlist(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def wishlist_add(request):
+    print("called")
     # Check if product exists
     try:
-        prod = Product.objects.get(id=request.POST['prod_id'])
+        prod = Product.objects.get(id=request.data['prod_id'])
     except Product.DoesNotExist:
-        return Response("The product with id=" + request.POST['prod_id'] + " does not exist.",
+        return Response("The product with id=" + request.data['prod_id'] + " does not exist.",
                         status.HTTP_404_NOT_FOUND)
 
     # Save Product in Wishlist
@@ -1229,6 +1230,31 @@ def proccess_order(user, item, qty, payment_meth):
         error_address = True
     return success, error_qty, error_address
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def enoughQty(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(django_user=request.user)
+        user_cart = Cart.objects.get(user=user)
+        for cart_item in user_cart.cart_item_set.all():
+            if cart_item.qty>cart_item.item.stock:
+                print("bigger")
+                return Response(cart_item.item.product.name, status=status.HTTP_200_OK)
+        return Response("none", status=status.HTTP_200_OK)
+    return Response("Log in first", status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getSumCart(request):
+    sum=0
+    if request.user.is_authenticated:
+        user = User.objects.get(django_user=request.user)
+        user_cart = Cart.objects.get(user=user)
+        for cart_item in user_cart.cart_item_set.all():
+            sum += cart_item.item.price * cart_item.qty
+        return Response(sum, status=status.HTTP_200_OK)
+    return Response("Log in first", status=status.HTTP_403_FORBIDDEN)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -1268,7 +1294,7 @@ def add_to_Cart(request, item_id):
     else:
         return Response("You must login first to add to cart", status=status.HTTP_403_FORBIDDEN)
 
-@api_view(['GET'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def rem_from_Cart(request, item_id):
     if request.user.is_authenticated:
@@ -1278,7 +1304,11 @@ def rem_from_Cart(request, item_id):
 
         cart_items = Cart_Item.objects.filter(cart=user_cart, item=item)
         if len(cart_items) > 0:
-            cart_items[0].delete()
+            if cart_items[0].qty==1:
+                cart_items[0].delete()
+            else:
+                cart_items[0].qty-=1
+                cart_items[0].save()
         return Response("Removed item(s) from the cart", status=status.HTTP_200_OK)
     else:
         return Response("You must login first to use the cart", status=status.HTTP_403_FORBIDDEN)
@@ -1369,6 +1399,30 @@ def cart(request):
     else:
         return HttpResponseRedirect('/login')
 
+@api_view(['GET'])
+def prod_stock(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(django_user=request.user)
+        user_wishlist = WishList.objects.get(user=user)
+        _wishlist = user_wishlist.prods.all()
+        prod_stock = {}
+        # Verify if it has stock or not in any of the shops
+        for prod in _wishlist:
+            has_stock = False
+            items = Item.objects.filter(product=prod)
+            qtys = [item.stock for item in items]
+
+            if qtys and max(qtys) > 0:
+                has_stock = True
+            else:
+                has_stock = False
+
+            if prod.name not in prod_stock:
+                prod_stock[prod.name] = has_stock
+        print(prod_stock)
+        return Response(prod_stock, status=status.HTTP_200_OK)
+    else:
+        return Response("You must login first to use the cart", status=status.HTTP_403_FORBIDDEN)
 
 def wishlist(request):
     if request.user.is_authenticated:

@@ -46,17 +46,17 @@
 
           <!-- Cart + WishList For Clients Only -->
           <ng-template [ngIf]="isAuthenticated && this.isShop==='false'" >
-            <a href="/wishlist" class="wishlist-link">
+            <a routerLink="/account/wishlist" class="wishlist-link">
               <i class="icon-heart-o"></i>
               <span class="wishlist-txt">Wishlist</span>
               <!-- <span class="wishlist-count">{{ wishList }}</span> -->
-              <span class="wishlist-count">0</span>
+              <span class="wishlist-count">{{counter2}}</span>
             </a>
-            <a href="/cart" class="wishlist-link">
+            <a routerLink="/account/cart" class="wishlist-link">
               <i class="icon-shopping-cart"></i>
               <span class="cart-txt">Cart</span>
               <!--<span class="wishlist-count">{{ cart }}</span>-->
-              <span class="wishlist-count">0</span>
+              <span class="wishlist-count">{{counter}}</span>
             </a>
           </ng-template>
           <!-- /Cart + WishList For Clients Only -->

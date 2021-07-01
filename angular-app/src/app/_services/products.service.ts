@@ -67,4 +67,19 @@ export class ProductsService {
     const url = this.baseURL + "search";
     return this.http.get<Product[]>(url);
   }
+
+  enoughQty():Observable<string>{
+    const url = REST_API_BASE_URL + "/cart/enoughQty";
+     return this.http.get<string>(url);
+  }
+
+  getSum():Observable<number>{
+    const url = REST_API_BASE_URL + "/cart/sum";
+     return this.http.get<number>(url);
+  }
+
+  prod_stock():Observable<any>{
+    const url = this.baseURL +"stock"
+    return this.http.get<any>(url);
+  }
 }
