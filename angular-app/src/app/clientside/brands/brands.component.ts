@@ -14,7 +14,7 @@ export class BrandsComponent implements OnInit {
   brands : Brand[] | undefined;
   customOptions: OwlOptions  = {
     nav: true,
-    navText: ["<div class='prev-slide'></div>","<div class='next-slide'></div>"],
+    navText: ["<i class='icon-angle-left'></i>","<i class='icon-angle-right'></i>"],
     items: 5,
     loop: true,
     center: false,

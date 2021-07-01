@@ -17,6 +17,7 @@ export class MyProductDetailsComponent implements OnInit {
   prod: Product | undefined;
   prod_per_shop: Item[] | undefined;
   wishlist: boolean | undefined;
+  feedback: string | undefined;
   constructor(private productService: ProductsService, private itemService: ItemsService,private wishService: WishlistService ,private route: ActivatedRoute, private cartService: CartService) { }
 
   ngOnInit(): void {
@@ -50,7 +51,13 @@ export class MyProductDetailsComponent implements OnInit {
 
   addWishList(){
     // @ts-ignore
-    this.wishService.addWishList(this.prod.id).subscribe(()=>{location.reload()});
+    this.wishService.addWishList(this.prod.id).subscribe(
+      data => {
+            location.reload();
+        },
+      error => {
+            window.location.href="/login";
+        });
   }
 
   remWishList(){
@@ -59,7 +66,14 @@ export class MyProductDetailsComponent implements OnInit {
   }
 
   addCart(id:number){
-    this.cartService.addCart(id).subscribe(()=>{location.reload()});
+    this.cartService.addCart(id).subscribe(
+      data => {
+            location.reload();
+        },
+        error => {
+            window.location.href="/login";
+        });
+
   }
 
 }
