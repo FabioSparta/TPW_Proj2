@@ -45,7 +45,7 @@ def get_prods_newarrivals(request):
 @api_view(['POST'])
 def sign_up(request):
     serializer = RegistrationSerializer(data=request.data)
-    print(request.data)
+
     if serializer.is_valid():
         # Save DjangoAuth User
         django_user = serializer.save()
@@ -67,14 +67,6 @@ def sign_up(request):
 
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_user_role(request):
-    user = User.objects.get(django_user=request.user)
-
-    isShop = request.user.groups.filter(name='shops').exists()
-    return Response({'isShop': isShop , 'username' : user.django_user.username, 'userId':user.django_user.id}
-                    , status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -83,15 +75,6 @@ def get_user_info(request):
     serializer = UserSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_user_orders(request):
-    user = User.objects.get(django_user=request.user)
-    orders = Order.objects.all().filter(user=user)
-
-    serializer = OrderSerializer(orders, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -602,25 +585,32 @@ def hot_deals(request):  #########
 
 @api_view(['GET'])
 def search(request):  ##########
-    if 'name' in request.get_full_path():
+    if 'name' in request.GET:
         name = request.GET['name']
-        category = request.GET['category']
-        global global_products
-        print(global_products)
-        if request.user.groups.filter(name='shops').exists():
-            loggedShop = Shop.objects.get(owner=request.user)
-            items = Item.objects.filter(shop=loggedShop)
+    else:
+        name = ""
 
-            if category == 'all':
-                global_products = [i.product for i in items if str(name).lower() in i.product.name.lower()]
-            else:
-                global_products = [i.product for i in items if str(name).lower() in i.product.name.lower() or str(
-                    category).lower() in i.product.category.name.lower()]
+    if 'category' in request.GET:
+        category = request.GET['category']
+    else:
+        category = "all"
+
+    global global_products
+
+    if request.user.groups.filter(name='shops').exists():
+        loggedShop = Shop.objects.get(owner=request.user)
+        items = Item.objects.filter(shop=loggedShop)
+
+        if category == 'all':
+            global_products = [i.product for i in items if str(name).lower() in i.product.name.lower()]
         else:
-            if category == 'all':
-                global_products = Product.objects.filter(name__icontains=name)
-            else:
-                global_products = Product.objects.filter(name__icontains=name, category__name__icontains=category)
+            global_products = [i.product for i in items if str(name).lower() in i.product.name.lower() or str(
+                category).lower() in i.product.category.name.lower()]
+    else:
+        if category == 'all':
+            global_products = Product.objects.filter(name__icontains=name)
+        else:
+            global_products = Product.objects.filter(name__icontains=name, category__name__icontains=category)
 
     page = request.GET.get('page')
     paginator = Paginator(global_products, 12)
@@ -1121,7 +1111,6 @@ def home_content(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def product_shops(request, prod_id):
     product_in_wishlist = False
     product = Product.objects.get(id=prod_id)
@@ -1142,14 +1131,28 @@ def product_shops(request, prod_id):
     serializer = ProductSerializer(product, many=True)
     serializer2 = ItemSerializer(item_per_shop, many=True)
 
-    data = {
-        'prod': serializer.data,
-        'wishlist': product_in_wishlist,
-        'prod_per_shop': serializer2.data
-    }
+    #data = {
+    #    'prod': serializer.data,
+    #    'wishlist': product_in_wishlist,
+    #    'prod_per_shop': serializer2.data
+    #}
 
-    return Response(data, status=status.HTTP_200_OK)
+    return Response(serializer2.data, status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def isWished(request, prod_id):
+    product_in_wishlist = False
+    product = Product.objects.get(id=prod_id)
+
+    if request.user.is_authenticated:
+        user = User.objects.get(django_user=request.user)
+        user_wishlist = WishList.objects.get(user=user)
+        if product in user_wishlist.prods.all():
+            product_in_wishlist = True
+
+    return Response(product_in_wishlist, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def order_product(request):
@@ -1204,22 +1207,28 @@ def proccess_order(user, item, qty, payment_meth):
     return success, error_qty, error_address
 
 
-@api_view(['PUT'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def add_to_Cart(request, item_id):
+    print("hello")
     if request.user.is_authenticated:
+        print("auth")
         user = User.objects.get(django_user=request.user)
         item = Item.objects.get(id=item_id)
-
+        print(user)
+        print(item)
         # Load User_Cart
         user_cart = Cart.objects.get(user=user)
-
+        print(user_cart)
         # Save item in Cart
         duplicated_item = Cart_Item.objects.filter(cart=user_cart, item=item)
+        print(duplicated_item)
         if duplicated_item:
+            print("duplicated")
             duplicated_item[0].qty = duplicated_item[0].qty + 1
             duplicated_item[0].save()
         else:
+            print("nope")
             cart_item = Cart_Item(cart=user_cart, item=item, qty=1)
             cart_item.save()
 
@@ -1228,6 +1237,7 @@ def add_to_Cart(request, item_id):
         for cart_item in user_cart.cart_item_set.all():
             new_total += cart_item.item.price * cart_item.qty
 
+        print(new_total)
         user_cart.total_price = new_total
         user_cart.save()
 
@@ -1235,7 +1245,7 @@ def add_to_Cart(request, item_id):
     else:
         return Response("You must login first to add to cart", status=status.HTTP_403_FORBIDDEN)
 
-@api_view(['DELETE'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def rem_from_Cart(request, item_id):
     if request.user.is_authenticated:
@@ -1368,5 +1378,3 @@ class AccountSignupView(SignupView):
 
 
 account_signup_view = AccountSignupView.as_view()
-
-

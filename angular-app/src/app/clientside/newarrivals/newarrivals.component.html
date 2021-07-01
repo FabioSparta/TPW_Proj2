@@ -8,29 +8,56 @@
       </div><!-- End .heading-left -->
     </div><!-- End .heading -->
 
-    <owl-carousel-o [options]="customOptions">
-      <ng-container *ngFor="let p of this.products;">
-        <ng-template carouselSlide>
-          <div class="product" >
-            <figure style="width: 250px ; height: 250px; text-align: center; vertical-align: middle;">
+    <div class="tab-content tab-content-carousel">
+      <div class="tab-pane p-0 fade show active" id="hot-all-tab" role="tabpanel"
+           aria-labelledby="hot-all-link">
+        <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow"
+             data-toggle="owl"
+             data-owl-options='{
+                            "nav": false,
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": {
+                                    "items":2
+                                },
+                                "480": {
+                                    "items":2
+                                },
+                                "768": {
+                                    "items":3
+                                },
+                                "992": {
+                                    "items":4
+                                },
+                                "1280": {
+                                    "items":5,
+                                    "nav": true
+                                }
+                            }
+                        }'>
+          <div class="product" *ngFor="let p of products">
+            <figure class="product-media">
               <a href="/product/{{ p.id }}/">
-                <img style="max-width: 100%;max-height: 100%;position: absolute;left: 0.7%;top:2%" src="assets{{ p.image }}" alt="Product image" class="product-image">
+                <img src="assets{{ p.image }}" alt="Product image" class="product-image">
               </a>
             </figure><!-- End .product-media -->
-          </div>
-          <div class="product-body">
-            <div class="product-cat">
-              <a href="#">{{ p.category?.name }}</a>
-            </div><!-- End .product-cat -->
-            <h3 class="product-title"><a href="/product/{{ p.id }}/">{{ p.name }}</a></h3>
-            <!-- End .product-title -->
-            <div class="product-price">
-              <span class="new-price">Lowest Price: {{ p.lowest_price }}</span>
-            </div><!-- End .product-price -->
-          </div><!-- End .product-body -->
-        </ng-template>
-      </ng-container>
-    </owl-carousel-o>
+
+            <div class="product-body">
+              <div class="product-cat">
+                <a href="#">{{ p.category?.name }}</a>
+              </div><!-- End .product-cat -->
+              <h3 class="product-title"><a href="/product/{{ p.id }}/">{{ p.name }}</a></h3>
+              <!-- End .product-title -->
+              <div class="product-price">
+                <span class="new-price">Lowest Price: {{ p.lowest_price }}</span>
+              </div><!-- End .product-price -->
+            </div><!-- End .product-body -->
+          </div><!-- End .product -->
+        </div><!-- End .owl-carousel -->
+      </div><!-- .End .tab-pane -->
+    </div><!-- End .tab-content -->
   </div><!-- End .container -->
 </div><!-- End .bg-light pt-5 pb-5 -->
 <app-footer></app-footer>

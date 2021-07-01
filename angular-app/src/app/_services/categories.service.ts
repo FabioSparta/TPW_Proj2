@@ -4,6 +4,7 @@ import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {REST_API_BASE_URL} from "../GlobalVars";
 import {Category} from "../_models/category";
 
+
 const httpOptions = {
   headers : new HttpHeaders({'Content-Type': 'application/json'})
 };

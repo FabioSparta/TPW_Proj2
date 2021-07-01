@@ -6,7 +6,7 @@ from django.contrib.auth import models as auth_models
 class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = auth_models.User
-        fields = ('email', 'username', 'password')
+        fields = ('id', 'email', 'username', 'password', 'first_name', 'last_name', 'is_superuser')
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -42,8 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ShopSerializer(serializers.ModelSerializer):
-    owner = DjangoUserSerializer()
-
     class Meta:
         model = Shop
         fields = '__all__'
@@ -71,7 +69,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    shop = ShopSerializer()
     class Meta:
         model = Item
         fields = '__all__'
@@ -97,7 +95,6 @@ class WishListSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    item = ItemSerializer()
     class Meta:
         model = Order
         fields = '__all__'

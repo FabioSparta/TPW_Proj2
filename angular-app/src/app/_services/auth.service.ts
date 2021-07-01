@@ -24,6 +24,7 @@ export class AuthService {
   }
 
   signUp(user: {}): Observable<any>  {
+    alert(user);
     const url = REST_API_BASE_URL + '/account/signup';
     return this.http.post<any>(url, user, httpOptions);
   }
@@ -41,29 +42,7 @@ export class AuthService {
   isAuthenticated(): boolean {
     return  localStorage.hasOwnProperty('userToken') && !!localStorage.getItem('userToken');
   }
-
-  isShop(): string | null {
-      return localStorage.getItem('isShop');
-  }
-
   getToken(): string {
     return localStorage.getItem('userToken') as string;
   }
-  getUsername(): string {
-    if(this.isAuthenticated())
-      return localStorage.getItem('username') as string;
-    else
-      return "";
-  }
-  getUserId(): string {
-    if(this.isAuthenticated())
-      return localStorage.getItem('userId') as string;
-    else
-      return "";
-  }
-  getRole(): Observable < any > {
-    const url = REST_API_BASE_URL + '/account/role';
-    return this.http.get(url, httpOptions);
-  }
-
 }

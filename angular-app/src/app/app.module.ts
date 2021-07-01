@@ -3,27 +3,27 @@ import { BrowserModule } from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from "@angular/common/http";
 import { NavbarComponent } from './_common/navbar/navbar.component';
 import { UserProfileComponent } from './clientside/user-profile/user-profile.component';
+import { ShopsComponent } from './clientside/shops/shops.component';
 import { BrandsComponent } from './clientside/brands/brands.component';
 import { CategoriesComponent } from './clientside/categories/categories.component';
-import { ProductsComponent } from './clientside/products/products.component';
-import { ItemsComponent } from './clientside/items/items.component';
+import { ProductsComponent } from './shopside/products/products.component';
+import { ItemsComponent } from './shopside/items/items.component';
 import { CartItemsComponent } from './clientside/cart-items/cart-items.component';
 import { OrdersComponent } from './clientside/orders/orders.component';
 import {FooterComponent} from "./_common/footer/footer.component";
 import { HotdealsComponent } from './clientside/hotdeals/hotdeals.component';
 import { NewarrivalsComponent } from './clientside/newarrivals/newarrivals.component';
-import { SignInComponent } from './clientside/sign-in/sign-in.component';
+import { SignInUpComponent } from './clientside/sign-in-up/sign-in-up.component';
 import { HomeComponent } from './clientside/home/home.component';
 import { ShopsCarouselComponent } from './clientside/shops-carousel/shops-carousel.component';
-import { CarouselModule } from 'ngx-owl-carousel-o';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ShopsListComponent } from './clientside/shops-list/shops-list.component';
-import { ShopDetailsComponent } from './clientside/shop-details/shop-details.component';
-import {AuthHeaderInterceptor} from "./_common/interceptor/auth-header-interceptor.interceptor";
-import { SignUpComponent } from './clientside/sign-up/sign-up.component';
+import { AlertComponent } from './_common/alert/alert.component';
+import { ItemDetailsComponent } from './shopside/item-details/item-details.component';
+import { ProductDetailsComponent } from './shopside/product-details/product-details.component';
+import { ListProductsComponent } from './clientside/list-products/list-products.component';
+import { MyProductDetailsComponent } from './clientside/my-product-details/my-product-details.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +31,7 @@ import { SignUpComponent } from './clientside/sign-up/sign-up.component';
     NavbarComponent,
     FooterComponent,
     UserProfileComponent,
+    ShopsComponent,
     BrandsComponent,
     CategoriesComponent,
     ProductsComponent,
@@ -39,12 +40,14 @@ import { SignUpComponent } from './clientside/sign-up/sign-up.component';
     OrdersComponent,
     HotdealsComponent,
     NewarrivalsComponent,
-    SignInComponent,
+    SignInUpComponent,
     HomeComponent,
     ShopsCarouselComponent,
-    ShopsListComponent,
-    ShopDetailsComponent,
-    SignUpComponent
+    AlertComponent,
+    ItemDetailsComponent,
+    ProductDetailsComponent,
+    ListProductsComponent,
+    MyProductDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,17 +55,8 @@ import { SignUpComponent } from './clientside/sign-up/sign-up.component';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    CarouselModule,
-    BrowserAnimationsModule
   ],
-  providers: [
-  {
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthHeaderInterceptor,
-    multi:true
-  }
-
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

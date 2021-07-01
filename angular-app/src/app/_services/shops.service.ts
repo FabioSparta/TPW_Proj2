@@ -21,10 +21,5 @@ export class ShopsService {
     const url = this.baseURL
     return this.http.get<Shop[]>(url);
   }
-
-  getShopDetails(id: number): Observable<Shop>{
-    const url = this.baseURL + '/' + id;
-    return this.http.get<Shop>(url)
-  }
 }
 
