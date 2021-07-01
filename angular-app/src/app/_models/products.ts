@@ -13,15 +13,15 @@ export class Product{
   category: Category;
   brand: Brand;
   lowest_price: number;
-  creator:Shop;
+  creator?:Shop;
+  shopId?: string | null;
 
-  constructor(reference:number, name:string, warehouse: string, details: string,creator: Shop, cat: Category, brand: Brand) {
+  constructor(reference:number, name:string, warehouse: string, details: string,cat: Category, brand: Brand) {
     this.reference_number = reference;
     this.name = name;
     this.warehouse = warehouse;
     this.details = details;
     this.qty_sold = 0;
-    this.creator = creator;
     this.category  = cat;
     this.brand = brand;
     this.lowest_price = 1000000;

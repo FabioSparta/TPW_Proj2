@@ -34,15 +34,30 @@ export class ProductsService {
     return this.http.get<Product>(url);
   }
 
-  createProduct(prod:Product):Observable<any>{
+  createProduct(prod:Product,cat:string,b:string, price:number):Observable<any>{
     const url = this.baseURL + "create";
     console.log(prod)
-    return this.http.post(url,prod,httpOptions);
+    // @ts-ignore
+    if (b != '') prod["new_brand"] = b
+    // @ts-ignore
+    if(cat != '') prod["new_cat"] = cat
+    // @ts-ignore
+    if(cat != '') prod["price"] = price
+
+    prod['shopId'] = localStorage.getItem('shopId')
+    let res = JSON.stringify(prod)
+    return this.http.post(url,res,httpOptions);
   }
 
-  updateProduct(prod: Product):Observable<any>{
+  updateProduct(prod: Product, cat:string,b:string):Observable<any>{
     const url = this.baseURL + "edit/"+prod.id;
-    return this.http.put(url,prod,httpOptions);
+    // @ts-ignore
+    if (b != '') prod["new_brand"] = b
+    // @ts-ignore
+    if(cat != '') prod["new_cat"] = cat
+
+    let res = JSON.stringify(prod)
+    return this.http.put(url,res,httpOptions);
   }
 
   deleteProduct(id: number):Observable<any>{

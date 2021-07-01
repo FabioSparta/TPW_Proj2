@@ -21,6 +21,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class UpdateProfileSerializer(serializers.Serializer):
     email = serializers.EmailField()
     username = serializers.CharField()
@@ -69,12 +70,14 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+        read_only_fields = ['id']
 
 
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = '__all__'
+        read_only_fields = ['id']
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -85,16 +88,28 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'image']
 
     def create(self, cat, brand, creator):
-        prod = Product.objects.create(price=self.validated_data['price'], stock=self.validated_data['stock'],product=prod ,shop=shop )
+        name = self.validated_data['name']
+        details = self.validated_data['details']
+        reference_number = self.validated_data['reference_number']
+        warehouse = self.validated_data['warehouse']
+        lowest_price = self.validated_data['lowest_price']
+        prod = Product.objects.create(category=cat,brand=brand,image='images/logo.png',creator=creator,reference_number=reference_number,name=name, details=details,warehouse=warehouse,qty_sold=0,lowest_price=lowest_price)
         return prod
 
-    def update(self, instance):
-        instance.price = self.validated_data['price']
-        instance.stock = self.validated_data['stock']
-        instance.save()
+    def update(self, instance,brand,cat):
+        instance.brand = brand
+        instance.category = cat
+        instance.name = self.validated_data['name']
+        instance.details = self.validated_data['details']
+        instance.reference_number = self.validated_data['reference_number']
+        instance.warehouse = self.validated_data['warehouse']
+        instance.qty_sold = self.validated_data['qty_sold']
+        instance.lowest_price = self.validated_data['lowest_price']
+
+        return instance.save()
 
 
 class ItemSerializer(serializers.ModelSerializer):

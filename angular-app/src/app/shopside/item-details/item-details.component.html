@@ -20,12 +20,16 @@
         <input [(ngModel)]="item.stock" type="number" style="text-align: center" class="form-control " required="">
       </div>
     </div>
-    <div class="form-group" align="center">
+    <div class="form-group" style="padding: 2% 20%;">
       <button class="btn btn-primary rounded btn-sm" type="button" (click)="update()">Update</button>
+      <span  style="padding-left: 2%"></span>
       <button class="btn btn-danger rounded btn-sm" type="button" data-toggle="modal" data-target="#exampleModal">
         Delete
       </button>
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div style="padding-top: 2%">
+            <textarea  *ngIf="feedback!=''" style="color:red; resize: none" disabled readonly class="form-control"> !! Error !! {{feedback}}
+            </textarea>
+      </div>      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">

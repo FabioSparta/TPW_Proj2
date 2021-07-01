@@ -21,10 +21,9 @@ export class ProductDetailsComponent implements OnInit {
   categories : Category[] | undefined;
   brands : Brand[] | undefined;
   selectedFile?: File
+  feedback = "";
 
   createProdForm = this.formBuilder.group({
-    cat:'',
-    brand:'',
     new_category:'',
     new_brand:'',
   });
@@ -61,35 +60,56 @@ export class ProductDetailsComponent implements OnInit {
 
   update():void {
     // @ts-ignore
-    this.prodService.updateProduct(this.product).subscribe(() => this.goBack(), (err) => console.log(err));
+    let new_cat = this.createProdForm.controls['new_category'].value
+    let new_brand = this.createProdForm.controls['new_brand'].value
+
+    // @ts-ignore
+    this.prodService.updateProduct(this.product, new_cat, new_brand).subscribe(() => this.goBack(),
+      (err) => {
+      // @ts-ignore
+        for (const [key, value] of Object.entries(err.error)) {
+          // @ts-ignore
+          for (const [k, val] of Object.entries(value)){
+              console.log(key +" : "+val);
+              // @ts-ignore
+              this.feedback += ("\n".concat(key.concat(" : ").concat(val)).concat("\n")).toString();
+            }
+          }
+        ;console.log(err)});
   }
 
   delete():void {
     // @ts-ignore
-    this.prodService.deleteProduct(this.product.id).subscribe(() => this.goBack());
+    this.prodService.deleteProduct(this.product.id).subscribe(() => this.goBack(),
+      (err) => {
+        // @ts-ignore
+        this.feedback += err.error;
+        // @ts-ignore
+        document.getElementById("closeBtn").click();
+      });
   }
 
   goBack(): void {
     // @ts-ignore
     document.getElementById("closeBtn").click();
-    this.location.back();
+    location.href = '/products';
   }
 
   selectChange(type: string): void{
     if (type == 'category'){
-      let cat = this.createProdForm.controls['cat'];
       let new_cat = this.createProdForm.controls['new_category'];
-      if (cat.value == 'Other')
+
+      // @ts-ignore
+      if (this.product?.category.name == 'Other')
         new_cat.enable();
       else
         new_cat.disable();
     }
 
     if (type == 'brand'){
-      let b = this.createProdForm.controls['brand'];
       let new_b = this.createProdForm.controls['new_brand'];
-
-      if (b.value == 'Other')
+      // @ts-ignore
+      if (this.product?.brand.name == 'Other')
         new_b.enable();
       else
         new_b.disable();

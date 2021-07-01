@@ -7,7 +7,7 @@ import {Location} from "@angular/common";
 import {ProductsService} from "../../_services/products.service";
 import {CategoriesService} from "../../_services/categories.service";
 import {BrandsService} from "../../_services/brands.service";
-import {Item} from "../../_models/items";
+import {Product} from "../../_models/products";
 
 @Component({
   selector: 'app-create-product',
@@ -57,19 +57,31 @@ export class CreateProductComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.prodService.createProduct(this.createProdForm.value).subscribe(() => this.goBack(), (err) => console.log(err));
+    // @ts-ignore
+    let new_cat = this.createProdForm.controls['new_category'].value
+    let new_brand = this.createProdForm.controls['new_brand'].value
+    let price = this.createProdForm.controls['price'].value
+    let reference = this.createProdForm.controls['reference'].value
+    let details = this.createProdForm.controls['details'].value
+    let warehouse = this.createProdForm.controls['warehouse'].value
+    let name = this.createProdForm.controls['name'].value
+    let brand = this.createProdForm.controls['brand'].value
+    let category = this.createProdForm.controls['category'].value
+
+      // @ts-ignore
+    this.prodService.createProduct(new Product(reference,name,warehouse,details,category,brand),new_cat, new_brand, price).subscribe(() => this.goBack(), (err) => console.log(err));
     this.createProdForm.reset();
   }
 
   goBack(): void {
-    this.location.back();
+    location.href = '/products';
   }
 
   selectChange(type: string): void{
     if (type == 'category'){
       let cat = this.createProdForm.controls['category'];
       let new_cat = this.createProdForm.controls['new_category'];
-      if (cat.value == 'Other')
+      if (cat.value.name == 'Other')
         new_cat.enable();
       else
         new_cat.disable();
@@ -79,7 +91,7 @@ export class CreateProductComponent implements OnInit {
       let b = this.createProdForm.controls['brand'];
       let new_b = this.createProdForm.controls['new_brand'];
 
-      if (b.value == 'Other')
+      if (b.value.name == 'Other')
         new_b.enable();
       else
         new_b.disable();

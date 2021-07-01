@@ -272,50 +272,45 @@ def create_product(request):
         serializer = ProductSerializer(data=request.data)
 
         if serializer.is_valid():
-            prod = serializer.save()
-            prod.creator = loggedShop
+            p = serializer.create(Category.objects.get(name=request.data['category']['name']), Brand.objects.get(name=request.data['brand']['name']),loggedShop)
 
-            if prod.image is None:
-                prod.image = 'images/logo.png'
-
-            if prod.brand.name == 'Other':
-                new_brand = request.data.get("new_brand")
-                if new_brand is not None:
-                    b = Brand(name=new_brand)
-                    b.save()
-                    prod.brand = b
-                else:
-                    Product.objects.get(id=prod.id).delete()
-                    return Response("New brand not created because no new_brand was defined",
-                                    status=status.HTTP_400_BAD_REQUEST)
-
-            if prod.category.name == 'Other':
+            if p.category.name == 'Other':
                 new_cat = request.data.get("new_cat")
                 if new_cat is not None:
                     c = Category(name=new_cat, totDevices=1)
                     c.save()
-                    prod.category = c
+                    p.category = c
+                    p.save()
                 else:
-                    Product.objects.get(id=prod.id).delete()
                     return Response("New category not created because no new_category was defined",
                                     status=status.HTTP_400_BAD_REQUEST)
+
+            if p.brand.name == 'Other':
+                new_brand = request.data.get("new_brand")
+                if new_brand is not None:
+                    b = Brand(name=new_brand)
+                    b.save()
+                    p.brand = b
+                    p.save()
+                else:
+                    return Response("New brand not created because no new_brand was defined",
+                                    status=status.HTTP_400_BAD_REQUEST)
             else:
-                prod.category.totDevices += 1
+                p.category.totDevices += 1
 
             try:
                 price = request.data.get("price")
-                i = Item(product=prod, price=price, shop=loggedShop)
+                i = Item(product=p, price=price, shop=loggedShop)
                 i.price = price
                 i.save()
-                if i.price < prod.lowest_price:
-                    prod.lowest_price = i.price
+                p.lowest_price = i.price
 
             except:
-                Product.objects.get(id=prod.id).delete()
+                Product.objects.get(id=p.id).delete()
                 return Response("Something went wrong: check if you defined the product price",
                                 status=status.HTTP_400_BAD_REQUEST)
 
-            prod.save()
+            p.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -341,14 +336,15 @@ def update_product(request, pid):
         serializer = ProductSerializer(p, data=request.data)
 
         if serializer.is_valid():
-            p = serializer.save()
-            p.creator = loggedShop
+            img = request.data.get("image")
+            if img is None:
+                img = 'images/logo.png'
 
-            if p.image is None:
-                print('hereeeeeeeeeeeeeee')
-                image = 'images/logo.png'
-                p.image = image
-                p.save()
+            serializer.update(p, Brand.objects.get(name=request.data['brand']['name']),Category.objects.get(name=request.data['category']['name']))
+            p.image = img
+            p.save()
+
+            p.creator = loggedShop
 
             if p.category.name == 'Other':
                 new_cat = request.data.get("new_cat")

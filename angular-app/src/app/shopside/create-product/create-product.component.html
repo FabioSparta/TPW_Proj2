@@ -38,7 +38,7 @@
         <div class="col-md-4">
           <select formControlName="category" required="" id="id_category" class="form-control" (change)="selectChange('category')">
             <option value="" selected> -------------- Choose Category --------------</option>
-            <option *ngFor="let c of categories" [value]="c.name">{{c.name}}
+            <option *ngFor="let c of categories" [ngValue]="c">{{c.name}}
             </option>
           </select>
         </div>
@@ -54,7 +54,7 @@
         <div class="col-md-4">
           <select formControlName="brand" required="" id="id_brand" class="form-control" (change)="selectChange('brand')">
             <option value="" selected> -------------- Choose Brand --------------</option>
-          <option *ngFor="let b of brands"  [value]="b.name">{{b.name}} </option>
+          <option *ngFor="let b of brands"  [ngValue]="b">{{b.name}} </option>
           </select>
         </div>
       </div>
@@ -70,7 +70,7 @@
           <input type="number" style="text-align: center" class="form-control " required="" placeholder="" formControlName="price">
         </div>
       </div>
-    <div class="form-group">
+    <div style="padding-left: 25%;" class="form-group" >
         <button class="btn btn-primary rounded btn-sm" type="submit">Create</button>
       </div>
     </form>

@@ -1,5 +1,7 @@
-<app-navbar></app-navbar>
-<div class="container" style="padding-top: 5%; padding-bottom: 3%">
+<div class="page-wrapper">
+  <app-navbar></app-navbar>
+  <h2 style="padding-left: 20%; padding-top: 2%; color: #39f" >Products List</h2>
+  <div class="container" style="padding-top: 5%; padding-bottom: 3%">
   <div class="cat-blocks-container" style="text-align: center">
     <div class="row justify-content-evenly">
       <div class="col-xl-3" *ngFor="let p of this.products">
@@ -25,3 +27,4 @@
 </div><!-- End .container -->
 
 <app-footer></app-footer>
+</div>
