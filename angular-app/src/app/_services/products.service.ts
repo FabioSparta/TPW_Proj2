@@ -54,17 +54,17 @@ export class ProductsService {
   }
 
   searchProductsByCat(cat:string):Observable<Product[]>{
-    const url = this.baseURL + "/search?category="+cat;
+    const url = this.baseURL + "search?category="+cat;
     return this.http.get<Product[]>(url);
   }
 
   searchProductsByKeyAndCat(key:string,cat:string):Observable<Product[]>{
-    const url = this.baseURL + "/search?name="+key+"&category="+cat;
+    const url = this.baseURL + "search?name="+key+"&category="+cat;
     return this.http.get<Product[]>(url);
   }
 
   searchAllProducts():Observable<Product[]>{
-    const url = this.baseURL + "/search";
+    const url = this.baseURL + "search";
     return this.http.get<Product[]>(url);
   }
 }
