@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e0e0302a-aa0f-4a68-aa56-cb8c58d7bdd4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../angular-app.zip" beforeDir="false" />
-    </list>
+    <list default="true" id="e0e0302a-aa0f-4a68-aa56-cb8c58d7bdd4" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +34,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/TPW_P1" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -50,6 +48,7 @@
       <workItem from="1625063707599" duration="666000" />
       <workItem from="1625064499523" duration="292000" />
       <workItem from="1625064794029" duration="9000" />
+      <workItem from="1625111012845" duration="11000" />
     </task>
     <servers />
   </component>

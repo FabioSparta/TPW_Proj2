@@ -70,10 +70,8 @@ def sign_up(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_role(request):
-    user = User.objects.get(django_user=request.user)
-
     isShop = request.user.groups.filter(name='shops').exists()
-    return Response({'isShop': isShop , 'username' : user.django_user.username, 'userId':user.django_user.id}
+    return Response({'isShop': isShop , 'username' : request.user.username, 'userId':request.user.id}
                     , status=status.HTTP_200_OK)
 
 @api_view(['GET'])
