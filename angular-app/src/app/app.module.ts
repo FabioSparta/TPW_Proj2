@@ -24,6 +24,7 @@ import { ShopsListComponent } from './clientside/shops-list/shops-list.component
 import { ShopDetailsComponent } from './clientside/shop-details/shop-details.component';
 import {AuthHeaderInterceptor} from "./_common/interceptor/auth-header-interceptor.interceptor";
 import { SignUpComponent } from './clientside/sign-up/sign-up.component';
+import { AddressComponent } from './clientside/address/address.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SignUpComponent } from './clientside/sign-up/sign-up.component';
     ShopsCarouselComponent,
     ShopsListComponent,
     ShopDetailsComponent,
-    SignUpComponent
+    SignUpComponent,
+    AddressComponent
   ],
   imports: [
     BrowserModule,
