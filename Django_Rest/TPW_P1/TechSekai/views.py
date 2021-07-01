@@ -83,6 +83,35 @@ def get_user_info(request):
     serializer = UserSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user_info(request):
+    serializer = UpdateProfileSerializer(data=request.data)
+    if serializer.is_valid():
+        user = User.objects.get(django_user=request.user)
+        user.django_user.email = serializer.data.get('email')
+        user.django_user.username = serializer.data.get('username')
+        print(serializer.data)
+        if serializer.data.get('gender') is not None:
+            user.gender = serializer.data.get('gender')
+        if serializer.data.get('phone_number') is not None:
+            user.phone_number = serializer.data.get('phone_number')
+        if serializer.data.get('first_name') is not None:
+            user.django_user.first_name = serializer.data.get('first_name')
+        if serializer.data.get('last_name') is not None:
+            user.django_user.last_name = serializer.data.get('last_name')
+        if serializer.data.get('age') is not None:
+            user.age = serializer.data.get('age')
+
+        user.django_user.save()
+        user.save()
+        print(user.django_user.first_name)
+
+        return Response("Updated successfully", status=status.HTTP_200_OK)
+
+    print(serializer.errors)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -98,13 +127,16 @@ def get_user_orders(request):
 def user_address_add(request):
     serializer = AddressSerializer(data=request.data)
     if serializer.is_valid():
+        print("valid address!")
         user = User.objects.get(django_user=request.user)
         serializer.save()
         user.address = json.loads(json.dumps(serializer.data), object_hook=lambda d: Address(**d))
         user.save()
-        return Response("Address updated successfully.", status=status.HTTP_201_CREATED)
+        return Response("Address added successfully.", status=status.HTTP_201_CREATED)
 
-    return Response(serializer.errors, status=status.HTTP_201_CREATED)
+    print(serializer.errors)
+    print("aaaaa")
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])

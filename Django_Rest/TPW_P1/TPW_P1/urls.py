@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/account/login',                      obtain_auth_token),
     path('api/account/role',                       views.get_user_role),
     path('api/account/info',                       views.get_user_info),
+    path('api/account/info/update',                views.update_user_info),
     path('api/account/orders',                     views.get_user_orders),
     path('api/account/address/add',                views.user_address_add),
     path('api/account/address/update',             views.user_address_update),

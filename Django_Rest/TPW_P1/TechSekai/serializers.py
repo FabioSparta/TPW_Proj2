@@ -1,3 +1,5 @@
+from django.core.validators import RegexValidator
+
 from TechSekai.models import *
 from rest_framework import serializers
 from django.contrib.auth import models as auth_models
@@ -18,6 +20,19 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+class UpdateProfileSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+
+    gender = serializers.ChoiceField(label="Gender", choices=GENDER, required=False, allow_null=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = serializers.IntegerField(validators=[phone_regex], label="Contact", required=False,allow_null=True)
+    age = serializers.IntegerField(required=False)
+    avatar = serializers.ImageField(required=False)
 
 
 class AddressSerializer(serializers.ModelSerializer):

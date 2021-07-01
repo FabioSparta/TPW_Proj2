@@ -1,1 +1,40 @@
-<p>address works!</p>
+<div class="row">
+  <div class="col-lg-9">
+    <div class="card card-dashboard">
+      <div class="card-body">
+        <h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
+
+        <!-- FORM HERE -->
+        <form [formGroup]="this.addressForm" (ngSubmit)="onSubmit()">
+
+          <div>
+            <label>Country:<input placeholder="Country"  class="form-control"  formControlName="country"   ></label>
+          </div>
+          <div>
+            <label>City:<input placeholder="City" class="form-control"  formControlName="city"  ></label>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label>Zip Code: <input placeholder="zip-code" class="form-control"  formControlName="zip_code" ></label>
+            </div>
+            <div class="col">
+              <label>Street: <input placeholder="Street"   class="form-control" formControlName="street" ></label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label>Floor: <input placeholder="Flooor" class="form-control"  formControlName="floor" ></label>
+            </div>
+            <div class="col">
+              <label>Door: <input placeholder="Flooor"  class="form-control" formControlName="door" ></label>
+            </div>
+          </div>
+          <button class="btn btn-dark" type="submit">Update</button>
+          <p *ngIf="feedback!=''" style="color:blue">{{feedback}}</p>
+        </form>
+      </div>
+    </div><!-- End .card-body -->
+  </div><!-- End .card-dashboard -->
+</div><!-- End .col-lg-6 -->
