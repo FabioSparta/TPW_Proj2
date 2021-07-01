@@ -24,9 +24,9 @@ export class UserService {
     return this.http.get<User>(url);
   }
 
-   updateUser(user: {}): Observable<any>  {
+  updateUser(user: {}): Observable<any>  {
     console.log("user right before post")
-     console.log(user)
+    console.log(user)
     const url = this.baseURL + '/info/update';
     return this.http.put<any>(url,user , httpOptions);
   }

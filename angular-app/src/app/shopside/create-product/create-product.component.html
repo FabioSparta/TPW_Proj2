@@ -1,11 +1,13 @@
 <div class="page-wrapper">
   <app-navbar></app-navbar>
   <h2 style="padding-left: 20%; padding-top: 2%; color: #39f" >Add Product</h2>
-  <!--
-    <div *ngIf="msg; else formEdit" style="text-align: center" role="alert">
-      <p class="btn btn-danger disabled btn-lg" style="margin-bottom: 10px; border-radius: 10px"> <strong>Error: </strong> {{ msg }}</p>
-    </div>-->
   <form [formGroup]="createProdForm" (ngSubmit)="onSubmit()" style="padding: 2% 20%;" enctype="multipart/form-data">
+    <div class="form-group row">
+      <label class="col-sm-2"> Reference Number </label>
+      <div class="col-md-4">
+        <input type="number" style="text-align: center" class="form-control " required="" placeholder="" formControlName="reference">
+      </div>
+    </div>
       <div class="form-group row">
         <label class="col-sm-2"> Name </label>
         <div class="col-md-4">
@@ -34,26 +36,11 @@
       <div class="form-group row">
         <label class="col-sm-2"> Category </label>
         <div class="col-md-4">
-          <select name="category" required="" id="id_category" class="form-control" (change)="selectChange('category')">
-            <option value="" selected> -------------- </option>
-            <option *ngFor="let c of categories" [value]="c">{{c.name}}
+          <select formControlName="category" required="" id="id_category" class="form-control" (change)="selectChange('category')">
+            <option value="" selected> -------------- Choose Category --------------</option>
+            <option *ngFor="let c of categories" [value]="c.name">{{c.name}}
             </option>
           </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Brand </label>
-        <div class="col-md-4">
-          <select name="brand" required="" id="id_brand" class="form-control" (change)="selectChange('brand')">
-          <option value="" selected> -------------- </option>
-          <option *ngFor="let b of brands"  [value]="b">{{b.name}} </option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Price </label>
-        <div class="col-md-4">
-          <input type="number" style="text-align: center" class="form-control " required="" placeholder="" formControlName="price">
         </div>
       </div>
       <div class="form-group row">
@@ -63,13 +50,27 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2"> Other brand </label>
+        <label class="col-sm-2"> Brand </label>
         <div class="col-md-4">
-          <input type="text" class="form-control" maxlength="50" formControlName="new_brand">
+          <select formControlName="brand" required="" id="id_brand" class="form-control" (change)="selectChange('brand')">
+            <option value="" selected> -------------- Choose Brand --------------</option>
+          <option *ngFor="let b of brands"  [value]="b.name">{{b.name}} </option>
+          </select>
         </div>
       </div>
-
-      <div class="form-group" align="center">
+    <div class="form-group row">
+      <label class="col-sm-2"> Other brand </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" maxlength="50" formControlName="new_brand">
+      </div>
+    </div>
+      <div class="form-group row">
+        <label class="col-sm-2"> Price </label>
+        <div class="col-md-4">
+          <input type="number" style="text-align: center" class="form-control " required="" placeholder="" formControlName="price">
+        </div>
+      </div>
+    <div class="form-group">
         <button class="btn btn-primary rounded btn-sm" type="submit">Create</button>
       </div>
     </form>

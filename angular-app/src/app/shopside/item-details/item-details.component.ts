@@ -9,8 +9,9 @@ import {Location} from "@angular/common";
   templateUrl: './item-details.component.html',
   styleUrls: ['./item-details.component.css']
 })
+
 export class ItemDetailsComponent implements OnInit {
-  @Input() item: Item | undefined;
+  @Input() item?: Item;
 
   constructor(private route: ActivatedRoute, private location: Location, private service: ItemsService) {}
 
@@ -26,7 +27,7 @@ export class ItemDetailsComponent implements OnInit {
 
   update():void {
     // @ts-ignore
-    this.service.updateItem(this.item.id).subscribe(() => this.goBack());
+    this.service.updateItem(this.item).subscribe(() => this.goBack());
   }
 
   delete():void {
@@ -35,6 +36,8 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   goBack(): void {
+    // @ts-ignore
+    document.getElementById("closeBtn").click();
     this.location.back();
   }
 

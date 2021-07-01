@@ -7,12 +7,12 @@ export class Item {
   shop?: Shop;
   product?: Product;
   stock: number;
+  shopId?: string | null;
 
-  constructor(id:number ,price:number, stock:number, product: Product, shop: Shop) {
+  constructor(price:number, stock:number, product: Product) {
     this.price = price;
-    this.id = id;
     this.stock = stock;
-    this.product = product;
-    this.shop = shop;
+    this.product =  product;
+    this.id = 0
   }
 }

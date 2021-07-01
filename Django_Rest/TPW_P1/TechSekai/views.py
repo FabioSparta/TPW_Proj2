@@ -67,12 +67,16 @@ def sign_up(request):
 
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_role(request):
     isShop = request.user.groups.filter(name='shops').exists()
-    return Response({'isShop': isShop , 'username' : request.user.username, 'userId':request.user.id}
+    idShop = Shop.objects.get(owner=request.user).id if isShop else 0
+    print(idShop)
+    return Response({'isShop': isShop , 'username' : request.user.username, 'userId':request.user.id, 'shopId': idShop}
                     , status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -119,6 +123,7 @@ def get_user_orders(request):
 
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -244,16 +249,17 @@ def list_brands(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_prods(request):
-    if request.user.groups.filter(name='shops').exists():
+    if 'all' not in request.GET and request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         p = Product.objects.filter(creator=loggedShop)
-        if 'num' in request.GET:
-            num = int(request.GET['num'])
-            p = p[:num]
-        serializer = ProductSerializer(p, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response("Must login with a shop account to list products", status=status.HTTP_403_FORBIDDEN)
+        p = Product.objects.all()
+
+    print(len(p))
+    if len(p) == 0:
+        return Response("No products found", status=status.HTTP_404_NOT_FOUND)
+    serializer = ProductSerializer(p, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -262,6 +268,7 @@ def create_product(request):
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
 
+        print(request.data)
         serializer = ProductSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -314,8 +321,6 @@ def create_product(request):
 
     return Response("You must login with a shop account!", status=status.HTTP_403_FORBIDDEN)
 
-# TODO: VER IMAGENS https://www.trell.se/blog/file-uploads-json-apis-django-rest-framework/
-
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -339,21 +344,6 @@ def update_product(request, pid):
             p = serializer.save()
             p.creator = loggedShop
 
-            price = request.data.get("price")
-            if price is not None:
-                try:
-                    i = Item.objects.get(product=p)
-                    i.price = price
-                    i.save()
-                    if i.price < p.lowest_price:
-                        p.lowest_price = i.price
-                        p.save()
-
-                except:
-                    return Response("Something went wrong: product price not updated",
-                                    status=status.HTTP_400_BAD_REQUEST)
-
-            print(p.image)
             if p.image is None:
                 print('hereeeeeeeeeeeeeee')
                 image = 'images/logo.png'
@@ -470,7 +460,7 @@ def shop_delete(request):
         return Response('Account deleted successfully', status=status.HTTP_204_NO_CONTENT)
     return Response('You don\'t have permissions to delete this account', status=status.HTTP_406_NOT_ACCEPTABLE)
 
-
+'''
 @api_view(['GET'])
 def get_list_items(request):
     items = Item.objects.all()
@@ -485,14 +475,11 @@ def get_list_items(request):
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
         items = Item.objects.filter(shop=loggedShop)
-        if 'num' in request.GET:
-            num = int(request.GET['num'])
-            items = items[:num]
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response('You don\'t have permissions to list items, login with shop account in order to do that',
                     status=status.HTTP_406_NOT_ACCEPTABLE)
-'''
+
 
 @api_view(['GET'])
 def see_item(request, id):
@@ -509,11 +496,11 @@ def see_item(request, id):
 def create_item(request):
     if request.user.groups.filter(name='shops').exists():
         loggedShop = Shop.objects.get(owner=request.user)
+        request.data['shop'] = loggedShop.__dict__
         serializer = ItemSerializer(data=request.data)
 
         if serializer.is_valid():
-            item = serializer.save()
-            item.shop = loggedShop
+            item = serializer.create(Product.objects.get(id=request.data['product']['id']),loggedShop)
 
             if item.price < item.product.lowest_price:
                 item.product.lowest_price = item.price
@@ -544,13 +531,13 @@ def update_item(request, id):
         serializer = ItemSerializer(i, data=request.data)
 
         if serializer.is_valid():
-            item = serializer.save()
+            serializer.update(i)
 
-            if item.price < item.product.lowest_price:
-                item.product.lowest_price = item.price
-                item.product.save()
+            if i.price < i.product.lowest_price:
+                i.product.lowest_price = i.price
+                i.product.save()
 
-            item.product.lowest_price = min([x.product.lowest_price for x in Item.objects.filter(product=item.product)])
+            i.product.lowest_price = min([x.product.lowest_price for x in Item.objects.filter(product=i.product)])
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)

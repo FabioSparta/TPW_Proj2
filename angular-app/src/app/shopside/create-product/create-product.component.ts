@@ -7,6 +7,7 @@ import {Location} from "@angular/common";
 import {ProductsService} from "../../_services/products.service";
 import {CategoriesService} from "../../_services/categories.service";
 import {BrandsService} from "../../_services/brands.service";
+import {Item} from "../../_models/items";
 
 @Component({
   selector: 'app-create-product',
@@ -21,12 +22,15 @@ export class CreateProductComponent implements OnInit {
   selectedFile?: File
 
   createProdForm = this.formBuilder.group({
+    reference:'',
     name: '',
     details: '',
     warehouse: '',
     price: 0,
     new_category:'',
     new_brand:'',
+    category:'',
+    brand:'',
   });
 
 
@@ -54,7 +58,6 @@ export class CreateProductComponent implements OnInit {
 
   onSubmit(): void {
     this.prodService.createProduct(this.createProdForm.value).subscribe(() => this.goBack(), (err) => console.log(err));
-    console.warn('Your product has been created', this.createProdForm.value);
     this.createProdForm.reset();
   }
 
@@ -64,19 +67,22 @@ export class CreateProductComponent implements OnInit {
 
   selectChange(type: string): void{
     if (type == 'category'){
-      let cat = this.createProdForm.controls['new_category'];
+      let cat = this.createProdForm.controls['category'];
+      let new_cat = this.createProdForm.controls['new_category'];
       if (cat.value == 'Other')
-        cat.enable();
+        new_cat.enable();
       else
-        cat.disable();
+        new_cat.disable();
     }
 
     if (type == 'brand'){
-      let b = this.createProdForm.controls['new_brand'];
+      let b = this.createProdForm.controls['brand'];
+      let new_b = this.createProdForm.controls['new_brand'];
+
       if (b.value == 'Other')
-        b.enable();
+        new_b.enable();
       else
-        b.disable();
+        new_b.disable();
     }
   }
 

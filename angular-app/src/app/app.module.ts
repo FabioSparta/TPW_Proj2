@@ -32,6 +32,7 @@ import { CreateProductComponent } from './shopside/create-product/create-product
 import { ListProductsComponent } from './clientside/list-products/list-products.component';
 import { MyProductDetailsComponent } from './clientside/my-product-details/my-product-details.component';
 import { WishlistComponent } from './clientside/wishlist/wishlist.component';
+import { CreateItemComponent } from './shopside/create-item/create-item.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { WishlistComponent } from './clientside/wishlist/wishlist.component';
     ListProductsComponent,
     MyProductDetailsComponent,
     WishlistComponent,
+    CreateItemComponent,
   ],
   imports: [
     BrowserModule,
