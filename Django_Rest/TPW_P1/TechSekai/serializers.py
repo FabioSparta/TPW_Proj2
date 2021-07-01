@@ -63,24 +63,42 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-    brand = BrandSerializer()
+    category = CategorySerializer(read_only=True)
+    brand = BrandSerializer(read_only=True)
+    creator = ShopSerializer(read_only=True)
 
     class Meta:
         model = Product
         fields = '__all__'
-        read_only_fields = ['id', ] #'creator'
-        print(Product.name)
+        read_only_fields = ['id']
+
+    def create(self, cat, brand, creator):
+        prod = Product.objects.create(price=self.validated_data['price'], stock=self.validated_data['stock'],product=prod ,shop=shop )
+        return prod
+
+    def update(self, instance):
+        instance.price = self.validated_data['price']
+        instance.stock = self.validated_data['stock']
+        instance.save()
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
-    shop = ShopSerializer()
+    product = ProductSerializer(read_only=True)
+    shop = ShopSerializer(read_only=True)
 
     class Meta:
         model = Item
         fields = '__all__'
         read_only_fields = ['id']
+
+    def create(self, prod, shop):
+        item = Item.objects.create(price=self.validated_data['price'], stock=self.validated_data['stock'],product=prod ,shop=shop )
+        return item
+
+    def update(self, instance):
+        instance.price = self.validated_data['price']
+        instance.stock = self.validated_data['stock']
+        instance.save()
 
 
 class CartSerializer(serializers.ModelSerializer):

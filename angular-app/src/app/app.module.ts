@@ -29,6 +29,7 @@ import { ProductDetailsComponent } from './shopside/product-details/product-deta
 import { CreateProductComponent } from './shopside/create-product/create-product.component';
 import { ListProductsComponent } from './clientside/list-products/list-products.component';
 import { MyProductDetailsComponent } from './clientside/my-product-details/my-product-details.component';
+import { CreateItemComponent } from './shopside/create-item/create-item.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { MyProductDetailsComponent } from './clientside/my-product-details/my-pr
     CreateProductComponent,
     ListProductsComponent,
     MyProductDetailsComponent,
+    CreateItemComponent,
   ],
   imports: [
     BrowserModule,

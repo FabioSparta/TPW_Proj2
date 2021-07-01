@@ -27,18 +27,21 @@ export class ItemsService {
     return this.http.get<Item>(url);
   }
 
-  createItem(prod:Item):Observable<any>{
+  createItem(item:Item):Observable<any>{
     const url = this.baseURL + "create";
-    return this.http.post(url,prod,httpOptions);
+    item['shopId'] = localStorage.getItem('shopId')
+    return this.http.post(url,item,httpOptions);
   }
 
-  updateItem(prod: Item):Observable<any>{
-    const url = this.baseURL + "edit/"+prod.id;
-    return this.http.put(url,prod,httpOptions);
+  updateItem(item: Item):Observable<any>{
+    const url = this.baseURL + "edit/"+item.id;
+    console.log(item)
+    item['shopId'] = localStorage.getItem('shopId')
+    return this.http.put(url,item,httpOptions);
   }
 
-  deleteItem(prod: Item):Observable<any>{
-    const url = this.baseURL + "delete/"+prod.id;
+  deleteItem(id: number):Observable<any>{
+    const url = this.baseURL + "delete/"+id;
     return this.http.delete(url,httpOptions);
   }
 

@@ -16,6 +16,7 @@ import {CreateProductComponent} from "./shopside/create-product/create-product.c
 import {ListProductsComponent} from "./clientside/list-products/list-products.component";
 import {MyProductDetailsComponent} from "./clientside/my-product-details/my-product-details.component";
 import {CartItemsComponent} from "./clientside/cart-items/cart-items.component";
+import {CreateItemComponent} from "./shopside/create-item/create-item.component";
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
@@ -28,6 +29,7 @@ const routes: Routes = [
   {path: 'shops/:id', component: ShopDetailsComponent},
   {path: 'userprofile', component: UserProfileComponent},
   {path: 'items', component:ItemsComponent},
+  {path: 'items/add', component:CreateItemComponent},
   {path: 'items/:id', component:ItemDetailsComponent},
   {path: 'products', component:ProductsComponent},
   {path: 'products/add', component:CreateProductComponent},

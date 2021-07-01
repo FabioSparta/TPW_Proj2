@@ -19,6 +19,11 @@ export class ProductsService {
   constructor(private http:HttpClient) { }
 
   getProducts():Observable<Product[]> {
+    const url = this.baseURL + "?all"
+    return this.http.get<Product[]>(url);
+  }
+
+  getShopProducts():Observable<Product[]> {
     const url = this.baseURL
     return this.http.get<Product[]>(url);
   }
@@ -30,7 +35,8 @@ export class ProductsService {
 
   createProduct(prod:Product):Observable<any>{
     const url = this.baseURL + "create";
-    return this.http.post(url,prod,httpOptions); // ver a situacao do price
+    console.log(prod)
+    return this.http.post(url,prod,httpOptions);
   }
 
   updateProduct(prod: Product):Observable<any>{
@@ -38,8 +44,8 @@ export class ProductsService {
     return this.http.put(url,prod,httpOptions);
   }
 
-  deleteProduct(prod: Product):Observable<any>{
-    const url = this.baseURL + "delete/"+prod.id;
+  deleteProduct(id: number):Observable<any>{
+    const url = this.baseURL + "delete/"+id;
     return this.http.delete(url,httpOptions);
   }
 
