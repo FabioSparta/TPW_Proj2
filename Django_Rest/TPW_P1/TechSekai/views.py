@@ -1178,30 +1178,16 @@ def isWished(request, prod_id):
 
     return Response(product_in_wishlist, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
+@api_view(['GET'])
 def order_product(request):
     if request.user.is_authenticated:
-        error_address = error_qty = success = False
-        serializer = OrderSerializer(data=request.data)
         user = User.objects.get(django_user=request.user)
-        if serializer.is_valid():
-            if user.address:
-                order = serializer.save()
-                if order.item.stock > order.quantity:
-                    order.total_price = order.quantity * order.item.price
-                    order.item.stock = order.item.stock - order.quantity
-                    order.save()
-                    # Remove from Cart if it was there
-                    user_cart = Cart.objects.get(user=user)
-                    cart_item = Cart_Item.objects.filter(cart=user_cart, item=item)
-                    if cart_item[0].item == item:
-                        cart_item[0].delete()
+        user_cart = Cart.objects.get(user=user)
+        cart_items = Cart_Item.objects.filter(cart=user_cart)
+        for item in cart_items:
+            proccess_order(user, item.item, item.qty, PAYMENT_METHOD[0][0])
 
-                    return Response(data=serializer.data, status=status.HTTP_200_OK)
-                else:
-                    return Response("There's not enough quantity of the product you're trying to buy!",status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response("Please add an address first!",status=status.HTTP_400_BAD_REQUEST)
+        return Response("Order Successful!", status=status.HTTP_200_OK)
     else:
         return Response("You must login first to order a product", status=status.HTTP_403_FORBIDDEN)
 

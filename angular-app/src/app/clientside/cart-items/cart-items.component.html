@@ -49,7 +49,7 @@
                                      step="1" data-decimals="0" required>
                             </div><!-- End .cart-product-quantity -->
                           </td>
-                          <td class="total-col">{{rowSum(cart_item?.qty,cart_item?.item?.price)}}</td>
+                          <td class="total-col">${{rowSum(cart_item?.qty,cart_item?.item?.price)}}</td>
                           <td class="remove-col"><a style="cursor: pointer" (click)="remCart(cart_item?.item?.id)" class="btn-remove"><i
                             class="icon-close"></i></a></td>
                         </tr>
@@ -66,7 +66,7 @@
                         <tbody>
                         <tr class="summary-total">
                           <td>Total:</td>
-                          <td id="total">{{sum}}</td>
+                          <td id="total">${{sum}}</td>
                         </tr><!-- End .summary-total -->
                         </tbody>
                       </table><!-- End .table table-summary -->
@@ -93,8 +93,8 @@
                           </div>
                           <div *ngIf='test=="none"'>
                             <div style="text-align: center">
-                              <input class="btn btn-outline-primary-2 btn-order btn-block" type="submit" name="buy_prods"
-                             value="CONFIRM PURCHASE"/>
+                              <button class="btn btn-outline-primary-2 btn-order btn-block" style="cursor: pointer" (click)="order()" name="buy_prods"
+                                      value="CONFIRM PURCHASE">CONFIRM PURCHASE </button>
                             </div>
                           </div>
                         </div>

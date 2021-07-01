@@ -50,6 +50,10 @@ export class CartItemsComponent implements OnInit {
     })
   }
 
+  order():void{
+      this.productService.orderProduct().subscribe(()=>{location.reload()});
+  }
+
   rowSum(num1:any,num2:any){
     return eval(num1)*eval(num2);
   }

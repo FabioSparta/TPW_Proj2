@@ -4,6 +4,7 @@ import {Observable} from "rxjs/internal/Observable";
 import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {REST_API_BASE_URL} from "../GlobalVars";
 import {Item} from "../_models/items";
+import {Order} from "../_models/order";
 
 const httpOptions = {
   headers : new HttpHeaders({'Content-Type': 'application/json'})
@@ -79,7 +80,12 @@ export class ProductsService {
   }
 
   prod_stock():Observable<any>{
-    const url = this.baseURL +"stock"
+    const url = this.baseURL +"stock";
+    return this.http.get<any>(url);
+  }
+
+  orderProduct():Observable<any>{
+    const url = REST_API_BASE_URL +"/account/order";
     return this.http.get<any>(url);
   }
 }
