@@ -41,4 +41,9 @@ export class ItemsService {
     const url = this.baseURL + "delete/"+prod.id;
     return this.http.delete(url,httpOptions);
   }
+
+  itemPerShop(id:number):Observable<Item[]>{
+    const url = REST_API_BASE_URL + "/shop/products/"+id;
+    return this.http.get<Item[]>(url);
+  }
 }

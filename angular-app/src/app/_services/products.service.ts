@@ -3,6 +3,7 @@ import {Product} from "../_models/products";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {REST_API_BASE_URL} from "../GlobalVars";
+import {Item} from "../_models/items";
 
 const httpOptions = {
   headers : new HttpHeaders({'Content-Type': 'application/json'})
@@ -52,4 +53,18 @@ export class ProductsService {
     return this.http.get<Product[]>(url);
   }
 
+  searchProductsByCat(cat:string):Observable<Product[]>{
+    const url = this.baseURL + "/search?category="+cat;
+    return this.http.get<Product[]>(url);
+  }
+
+  searchProductsByKeyAndCat(key:string,cat:string):Observable<Product[]>{
+    const url = this.baseURL + "/search?name="+key+"&category="+cat;
+    return this.http.get<Product[]>(url);
+  }
+
+  searchAllProducts():Observable<Product[]>{
+    const url = this.baseURL + "/search";
+    return this.http.get<Product[]>(url);
+  }
 }

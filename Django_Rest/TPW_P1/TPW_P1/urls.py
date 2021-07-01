@@ -59,7 +59,8 @@ urlpatterns = [
     path('api/shops/edit', views.edit_shop), #POR IMPLEMENTAR
 
     path('api/home', views.home_content),
-    path('api/shop/products/<int:prod_id>', views.product_shops), #Use? Test
+    path('api/shop/products/<int:prod_id>', views.product_shops),
+    path('api/shop/products/wished/<int:prod_id>', views.isWished),
 
     ################################
 

@@ -23,6 +23,8 @@ import { AlertComponent } from './_common/alert/alert.component';
 import { ItemDetailsComponent } from './shopside/item-details/item-details.component';
 import { ProductDetailsComponent } from './shopside/product-details/product-details.component';
 import { CreateProductComponent } from './shopside/create-product/create-product.component';
+import { ListProductsComponent } from './clientside/list-products/list-products.component';
+import { MyProductDetailsComponent } from './clientside/my-product-details/my-product-details.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { CreateProductComponent } from './shopside/create-product/create-product
     AlertComponent,
     ItemDetailsComponent,
     ProductDetailsComponent,
-    CreateProductComponent
+    CreateProductComponent,
+    ListProductsComponent,
+    MyProductDetailsComponent,
   ],
   imports: [
     BrowserModule,
