@@ -12,7 +12,7 @@ import {ShopsService} from "../../_services/shops.service";
 export class ShopsCarouselComponent implements OnInit {
   shops : Shop[] | undefined
   customOptions: OwlOptions  = {
-    nav: true,
+    nav: false,
     navText: ["<div class='prev-slide'></div>","<div class='next-slide'></div>"],
     items: 5,
     loop: true,

@@ -13,7 +13,7 @@
   </p>
   <p>
     <span style="color: #39f; font-weight: bold">Address:</span>
-    <ng-template [ngIf]="shop?.address" [ngIfElse]="elseBlock"> {{ shop?.address }}</ng-template>
+    <ng-template [ngIf]="shop?.address?.zip_code" [ngIfElse]="elseBlock"> {{ shop?.address?.zip_code }}</ng-template>
     <ng-template #elseBlock> ---- </ng-template>
   </p>
   <p>

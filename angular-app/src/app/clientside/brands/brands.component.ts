@@ -13,7 +13,7 @@ export class BrandsComponent implements OnInit {
 
   brands : Brand[] | undefined;
   customOptions: OwlOptions  = {
-    nav: true,
+    nav: false,
     navText: ["<i class='icon-angle-left'></i>","<i class='icon-angle-right'></i>"],
     items: 5,
     loop: true,

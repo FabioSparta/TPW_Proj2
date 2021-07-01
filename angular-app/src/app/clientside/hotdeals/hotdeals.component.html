@@ -12,16 +12,16 @@
             <ng-template carouselSlide>
               <div class="product" >
               <figure style="width: 250px ; height: 250px; text-align: center; vertical-align: middle;">
-                <a href="/product/{{ p.id }}/">
+                <a routerLink="/products/details/{{ p.id }}/">
                   <img style="max-width: 100%;max-height: 100%;position: absolute;left: 0.7%;top:2%" src="assets{{ p.image }}" alt="Product image" class="product-image">
                 </a>
               </figure><!-- End .product-media -->
               </div>
               <div class="product-body">
                 <div class="product-cat">
-                  <a href="#">{{ p.category?.name }}</a>
+                  <a routerLink="/search/{{ p.category?.name }}">{{ p.category?.name }}</a>
                 </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="/product/{{ p.id }}/">{{ p.name }}</a></h3>
+                <h3 class="product-title"><a routerLink="/products/details/{{ p.id }}">{{ p.name }}</a></h3>
                 <!-- End .product-title -->
                 <div class="product-price">
                   <span class="new-price">Lowest Price: {{ p.lowest_price }}</span>

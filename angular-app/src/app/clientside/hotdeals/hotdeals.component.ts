@@ -13,7 +13,7 @@ export class HotdealsComponent implements OnInit {
 
   products : Product[] | undefined;
   customOptions: OwlOptions  = {
-    nav: true,
+    nav: false,
     navText: ["<div class='prev-slide'></div>","<div class='next-slide'></div>"],
     items: 5,
     loop: false,
