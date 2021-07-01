@@ -122,7 +122,7 @@ class ItemSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def create(self, prod, shop):
-        item = Item.objects.create(price=self.validated_data['price'], stock=self.validated_data['stock'],product=prod ,shop=shop )
+        item = Item.objects.create(price=self.validated_data['price'], stock=self.validated_data['stock'], product=prod, shop=shop)
         return item
 
     def update(self, instance):
