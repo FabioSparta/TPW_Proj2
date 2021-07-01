@@ -54,7 +54,7 @@ export class NavbarComponent implements OnInit {
 
   logout():void{
     this.authService.logout();
-    window.location.reload();
+    window.location.href = "/home";
   }
 
   updateKey() {

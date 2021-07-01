@@ -31,9 +31,9 @@ export class WishlistComponent implements OnInit {
     })
   }
 
-  remWishList(id:number){
+  remWishList(id:any){
     // @ts-ignore
-    this.wishService.remWishList(id).subscribe(()=>{location.reload()});
+    this.wishService.remWishList(eval(id)).subscribe(()=>{location.reload()});
   }
 
   searchDict(key:string):boolean{
