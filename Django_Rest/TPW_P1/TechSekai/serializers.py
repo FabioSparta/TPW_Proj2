@@ -78,6 +78,9 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    brand = BrandSerializer()
+
     class Meta:
         model = Product
         fields = '__all__'
@@ -87,6 +90,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
+    shop = ShopSerializer()
+
     class Meta:
         model = Item
         fields = '__all__'

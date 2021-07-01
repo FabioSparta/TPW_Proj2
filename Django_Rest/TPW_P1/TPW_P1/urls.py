@@ -12,10 +12,10 @@ urlpatterns = [
 
     # General
     #path('api/prods/all',                        views.get_prods_all),
-    path('api/prods/hotdeals',                    views.get_prods_hotdeals),
-    path('api/prods/newarrivals',                 views.get_prods_newarrivals),
-    path('api/prods/search', views.search),
-    path('api/prods/search2/<str:filter>/<str:value>', views.search2),
+    path('api/products/hotdeals',                    views.get_prods_hotdeals),
+    path('api/products/newarrivals',                 views.get_prods_newarrivals),
+    path('api/products/search', views.search),
+    path('api/products/search2/<str:filter>/<str:value>', views.search2),
 
     # User
     path('api/account/signup',                     views.sign_up),
@@ -57,12 +57,13 @@ urlpatterns = [
     # Shops
     path('api/shops/', views.get_shops_list),
     path('api/shops/<int:sid>', views.get_shop),
-    path('api/shops/create', views.create_shop), #POR IMPLEMENTAR
-    path('api/shops/delete', views.shop_delete),
+    path('api/shops/create', views.create_shop),
+    path('api/shops/delete', views.shop_delete), #not working
     path('api/shops/edit', views.edit_shop), #POR IMPLEMENTAR
 
     path('api/home', views.home_content),
-    path('api/shop/products/<int:prod_id>', views.product_shops), #Use? Test
+    path('api/shop/products/<int:prod_id>', views.product_shops),
+    path('api/shop/products/wished/<int:prod_id>', views.isWished),
 
     ################################
 

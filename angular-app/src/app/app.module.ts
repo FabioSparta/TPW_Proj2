@@ -8,8 +8,8 @@ import { NavbarComponent } from './_common/navbar/navbar.component';
 import { UserProfileComponent } from './clientside/user-profile/user-profile.component';
 import { BrandsComponent } from './clientside/brands/brands.component';
 import { CategoriesComponent } from './clientside/categories/categories.component';
-import { ProductsComponent } from './clientside/products/products.component';
-import { ItemsComponent } from './clientside/items/items.component';
+import { ProductsComponent } from './shopside/products/products.component';
+import { ItemsComponent } from './shopside/items/items.component';
 import { CartItemsComponent } from './clientside/cart-items/cart-items.component';
 import { OrdersComponent } from './clientside/orders/orders.component';
 import {FooterComponent} from "./_common/footer/footer.component";
@@ -26,6 +26,11 @@ import {AuthHeaderInterceptor} from "./_common/interceptor/auth-header-intercept
 import { SignUpComponent } from './clientside/sign-up/sign-up.component';
 import { AddressComponent } from './clientside/address/address.component';
 import { EditProfileComponent } from './clientside/edit-profile/edit-profile.component';
+import { ItemDetailsComponent } from './shopside/item-details/item-details.component';
+import { ProductDetailsComponent } from './shopside/product-details/product-details.component';
+import { CreateProductComponent } from './shopside/create-product/create-product.component';
+import { ListProductsComponent } from './clientside/list-products/list-products.component';
+import { MyProductDetailsComponent } from './clientside/my-product-details/my-product-details.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +53,12 @@ import { EditProfileComponent } from './clientside/edit-profile/edit-profile.com
     ShopDetailsComponent,
     SignUpComponent,
     AddressComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    ItemDetailsComponent,
+    ProductDetailsComponent,
+    CreateProductComponent,
+    ListProductsComponent,
+    MyProductDetailsComponent,
   ],
   imports: [
     BrowserModule,
