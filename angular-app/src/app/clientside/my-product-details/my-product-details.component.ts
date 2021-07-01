@@ -6,6 +6,7 @@ import {Item} from "../../_models/items";
 import {ItemsService} from "../../_services/items.service";
 import {WishlistService} from "../../_services/wishlist.service";
 import {CartService} from "../../_services/cart.service";
+import {CartItem} from "../../_models/cartItem";
 
 @Component({
   selector: 'app-my-product-details',
@@ -47,8 +48,18 @@ export class MyProductDetailsComponent implements OnInit {
       });
   }
 
+  addWishList(){
+    // @ts-ignore
+    this.wishService.addWishList(this.prod.id).subscribe(()=>{location.reload()});
+  }
+
+  remWishList(){
+    // @ts-ignore
+    this.wishService.remWishList(this.prod.id).subscribe(()=>{location.reload()});
+  }
+
   addCart(id:number){
-    this.cartService.addCart(id).subscribe(()=>{});
+    this.cartService.addCart(id).subscribe(()=>{location.reload()});
   }
 
 }

@@ -22,7 +22,7 @@ export class CartService {
 
   remCart(id:number):Observable<any>{
     const url = REST_API_BASE_URL + "/account/cart/rem/"+id;
-    return this.http.get<any>(url);
+    return this.http.delete<any>(url);
   }
 
   buyCart(id:number):Observable<any>{

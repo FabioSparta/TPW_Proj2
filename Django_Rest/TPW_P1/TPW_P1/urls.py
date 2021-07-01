@@ -65,6 +65,10 @@ urlpatterns = [
     path('api/shop/products/<int:prod_id>', views.product_shops),
     path('api/shop/products/wished/<int:prod_id>', views.isWished),
 
+    path('api/cart/enoughQty', views.enoughQty),
+    path('api/cart/sum', views.getSumCart),
+    path('api/products/stock', views.prod_stock),
+
     ################################
 
 

@@ -16,6 +16,7 @@ import {CreateProductComponent} from "./shopside/create-product/create-product.c
 import {ListProductsComponent} from "./clientside/list-products/list-products.component";
 import {MyProductDetailsComponent} from "./clientside/my-product-details/my-product-details.component";
 import {CartItemsComponent} from "./clientside/cart-items/cart-items.component";
+import {WishlistComponent} from "./clientside/wishlist/wishlist.component";
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
@@ -37,6 +38,7 @@ const routes: Routes = [
   {path: 'search', component: ListProductsComponent}, //No Key and No Cat
   {path: 'products/details/:id', component: MyProductDetailsComponent},
   {path: 'account/cart', component: CartItemsComponent},
+  {path: 'account/wishlist', component: WishlistComponent},
 
   //{path: 'authors', component:AuthorsComponent},
   //{path: 'overview', component:OverviewComponent},

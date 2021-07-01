@@ -34,9 +34,9 @@
                           <td class="product-col">
                             <div class="product">
                               <figure class="product-media">
-                                <a href="#"><img src="assets{{ cart_item?.item?.product?.image }}" alt="Product image"></a>
+                                <a routerLink="/products/details/{{cart_item?.item?.product?.id}}"><img src="assets{{ cart_item?.item?.product?.image }}" alt="Product image"></a>
                               </figure>
-                              <h3 class="product-title"><a href="#">{{ cart_item?.item?.product?.name }}</a></h3>
+                              <h3 class="product-title"><a routerLink="/products/details/{{cart_item?.item?.product?.id}}">{{ cart_item?.item?.product?.name }}</a></h3>
                               <!-- End .product-title -->
                             </div><!-- End .product -->
                           </td>
@@ -45,12 +45,12 @@
                             <div class="cart-product-quantity">
                               <input type="hidden" id="item_id" name="item_id[]" value="{{ cart_item?.item?.id }}">
                               <input type="number"
-                                     class="counter form-control" name="qty[]" value="{{ cart_item?.qty }}" min="1" max="10"
+                                     class="counter form-control" readonly name="qty[]" value="{{ cart_item?.qty }}" min="1" max="10"
                                      step="1" data-decimals="0" required>
                             </div><!-- End .cart-product-quantity -->
                           </td>
-                          <td class="total-col">{{cart_item?.cart?.total_price}}</td>
-                          <td class="remove-col"><a href="/rem_from_cart/{{ cart_item?.item?.id }}" class="btn-remove"><i
+                          <td class="total-col">${{rowSum(cart_item?.qty,cart_item?.item?.price)}}</td>
+                          <td class="remove-col"><a style="cursor: pointer" (click)="remCart(cart_item?.item?.id)" class="btn-remove"><i
                             class="icon-close"></i></a></td>
                         </tr>
                         </tbody>
@@ -66,33 +66,38 @@
                         <tbody>
                         <tr class="summary-total">
                           <td>Total:</td>
-                          <td id="total">Calculating...</td>
+                          <td id="total">${{sum}}</td>
                         </tr><!-- End .summary-total -->
                         </tbody>
                       </table><!-- End .table table-summary -->
                       <!--{{ payment_meth_form }}-->
-                      <!--{% if error_address %}-->
-                      <p class="btn btn-danger disabled btn-lg"
-                         style="color: white; margin-bottom: 10px; border-radius: 10px;"> You need to Add an Address in your
-                        account settings first! </p>
-                      <div style="text-align: center">
-                        <p class="btn btn-info disabled btn-lg" style="margin-bottom: 10px; border-radius: 10px"><a
-                          style="text-decoration: underline; color: white" href="/account/">Go to the Address Tab</a></p>
+                      <div *ngIf="user?.address==null">
+                          <p class="btn btn-danger disabled btn-lg"
+                          style="color: white; margin-bottom: 10px; border-radius: 10px;"> You need to Add an Address in your
+                          account settings first! </p>
+                          <div style="text-align: center">
+                            <p class="btn btn-info disabled btn-lg" style="margin-bottom: 10px; border-radius: 10px"><a
+                              style="text-decoration: underline; color: white" href="/account/">Go to the Address Tab</a></p>
+                          </div>
                       </div>
-                      <!--{% elif error_qty_items > 0 %}-->
-                      <p class="btn btn-danger disabled btn-lg"
-                         style="color: white; margin-bottom: 10px; border-radius: 10px;">
-                        Unfortunately  <!--{{ error_qty_item.product.name }}--> does not have enough stock :( </p>
-                      <p class="btn btn-success disabled btn-lg"
-                         style="color: white; margin-bottom: 10px; border-radius: 10px;"> However, Products Processed
-                        before <!--{{ error_qty_item.product.name }}--> have been bought Successfuly!</p>
-                      <div style="text-align: center">
-                        <p class="btn btn-info disabled btn-lg" style="margin-bottom: 10px; border-radius: 10px"><a
-                          style="text-decoration: underline; color: white" href="/account/">Go to the Orders Tab</a></p>
-                      </div>
-                      <!--{% endif %}-->
-                      <input class="btn btn-outline-primary-2 btn-order btn-block" type="submit" name="buy_prods"
+                        <div *ngIf="user?.address!=null">
+                           <div *ngIf='test!="none"'>
+                              <p class="btn btn-danger disabled btn-lg"
+                            style="color: white; margin-bottom: 10px; border-radius: 10px;">
+                            Unfortunately {{test}} does not have enough stock :( </p>
+                            <!--<p class="btn btn-success disabled btn-lg"
+                            style="color: white; margin-bottom: 10px; border-radius: 10px;"> However, Products Processed
+                            before {{test}} have been bought Successfuly!</p>-->
+                             <input disabled class="btn btn-outline-primary-2 btn-order btn-block" type="submit" name="buy_prods"
                              value="CONFIRM PURCHASE"/>
+                          </div>
+                          <div *ngIf='test=="none"'>
+                            <div style="text-align: center">
+                              <button class="btn btn-outline-primary-2 btn-order btn-block" style="cursor: pointer" (click)="order()" name="buy_prods"
+                                      value="CONFIRM PURCHASE">CONFIRM PURCHASE </button>
+                            </div>
+                          </div>
+                        </div>
 
               </div><!-- End .summary -->
             </aside><!-- End .col-lg-3 -->

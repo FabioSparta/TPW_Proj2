@@ -20,10 +20,10 @@
                             <div class="product-details-action">
                                 <div class="details-action-wrapper">
                                   <ng-template [ngIf]="!wishlist" [ngIfElse]="elsePart">
-                                    <a class="btn-product btn-wishlist" style="cursor: pointer" title="Wishlist">Add to WishList</a>
+                                    <a (click)="addWishList()" class="btn-product btn-wishlist" style="cursor: pointer" title="Wishlist">Add to WishList</a>
                                   </ng-template>
                                   <ng-template #elsePart>
-                                    <a class="btn-product btn-wishlist" style="cursor: pointer" title="Wishlist">Remove from WishList</a>
+                                    <a (click)="remWishList()" class="btn-product btn-wishlist" style="cursor: pointer" title="Wishlist">Remove from WishList</a>
                                   </ng-template>
                                 </div><!-- End .details-action-wrapper -->
                             </div><!-- End .product-details-action -->

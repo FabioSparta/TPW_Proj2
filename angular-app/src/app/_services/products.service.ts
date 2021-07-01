@@ -4,6 +4,7 @@ import {Observable} from "rxjs/internal/Observable";
 import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {REST_API_BASE_URL} from "../GlobalVars";
 import {Item} from "../_models/items";
+import {Order} from "../_models/order";
 
 const httpOptions = {
   headers : new HttpHeaders({'Content-Type': 'application/json'})
@@ -66,5 +67,25 @@ export class ProductsService {
   searchAllProducts():Observable<Product[]>{
     const url = this.baseURL + "search";
     return this.http.get<Product[]>(url);
+  }
+
+  enoughQty():Observable<string>{
+    const url = REST_API_BASE_URL + "/cart/enoughQty";
+     return this.http.get<string>(url);
+  }
+
+  getSum():Observable<number>{
+    const url = REST_API_BASE_URL + "/cart/sum";
+     return this.http.get<number>(url);
+  }
+
+  prod_stock():Observable<any>{
+    const url = this.baseURL +"stock";
+    return this.http.get<any>(url);
+  }
+
+  orderProduct():Observable<any>{
+    const url = REST_API_BASE_URL +"/account/order";
+    return this.http.get<any>(url);
   }
 }
