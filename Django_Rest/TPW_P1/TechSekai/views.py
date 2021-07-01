@@ -45,7 +45,7 @@ def get_prods_newarrivals(request):
 @api_view(['POST'])
 def sign_up(request):
     serializer = RegistrationSerializer(data=request.data)
-
+    print(request.data)
     if serializer.is_valid():
         # Save DjangoAuth User
         django_user = serializer.save()
@@ -67,6 +67,14 @@ def sign_up(request):
 
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_role(request):
+    user = User.objects.get(django_user=request.user)
+
+    isShop = request.user.groups.filter(name='shops').exists()
+    return Response({'isShop': isShop , 'username' : user.django_user.username, 'userId':user.django_user.id}
+                    , status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -75,6 +83,15 @@ def get_user_info(request):
     serializer = UserSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_orders(request):
+    user = User.objects.get(django_user=request.user)
+    orders = Order.objects.all().filter(user=user)
+
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -1351,3 +1368,5 @@ class AccountSignupView(SignupView):
 
 
 account_signup_view = AccountSignupView.as_view()
+
+

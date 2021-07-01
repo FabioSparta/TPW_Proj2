@@ -20,7 +20,9 @@ urlpatterns = [
     # User
     path('api/account/signup',                     views.sign_up),
     path('api/account/login',                      obtain_auth_token),
+    path('api/account/role',                       views.get_user_role),
     path('api/account/info',                       views.get_user_info),
+    path('api/account/orders',                     views.get_user_orders),
     path('api/account/address/add',                views.user_address_add),
     path('api/account/address/update',             views.user_address_update),
     path('api/account/address/rem',                views.user_address_rem),

@@ -56,89 +56,16 @@
    <!-- {% endif %}-->
   </div><!-- End .container -->
 
-  <!--{% if brands_list and not request.user|has_group:"shops"%}-->
   <div class="container">
     <h2 class="title title-border mb-5">Shop by Brands</h2><!-- End .title -->
-    <div class="owl-carousel mb-5 owl-simple" data-toggle="owl"
-         data-owl-options='{
-            "nav": false,
-            "dots": true,
-            "margin": 30,
-            "loop": false,
-            "responsive": {
-                "0": {
-                    "items":2
-                },
-                "420": {
-                    "items":3
-                },
-                "600": {
-                    "items":4
-                },
-                "900": {
-                    "items":5
-                },
-                "1024": {
-                    "items":6
-                },
-                "1280": {
-                    "items":6,
-                    "nav": true,
-                    "dots": false
-                }
-            }
-        }'>
-
-      <!--{%  for brand in brands_list %}
-      <a href="search/brand/{{ brand.name }}/" class="brand" style="background: #23272b;">
-        <p style="color: whitesmoke"> {{ brand.name }}</p>
-      </a>
-      {% endfor %} -->
-    </div><!-- End .owl-carousel -->
+    <app-brands></app-brands>
   </div><!-- End .container -->
  <!-- {% endif %}-->
 
   <!--{% if shops and not request.user|has_group:"shops"%} -->
   <div class="container">
     <h2 class="title title-border mb-5">Shop by Store</h2><!-- End .title -->
-    <div class="owl-carousel mb-5 owl-simple" data-toggle="owl"
-         data-owl-options='{
-                "nav": false,
-                "dots": true,
-                "margin": 30,
-                "loop": false,
-                "responsive": {
-                    "0": {
-                        "items":2
-                    },
-                    "420": {
-                        "items":3
-                    },
-                    "600": {
-                        "items":4
-                    },
-                    "900": {
-                        "items":5
-                    },
-                    "1024": {
-                        "items":6
-                    },
-                    "1280": {
-                        "items":6,
-                        "nav": true,
-                        "dots": false
-                    }
-                }
-            }'>
-      <!--
-      {%  for shop in shops %}
-      <a href="search/shop/{{ shop.name }}/" style="text-align: center">
-        <img src="/media/{{ shop.image }}" alt="{{ shop.name }}">
-        <p style="color: black"> {{ shop.name }}</p>
-      </a>
-      {% endfor %}
-      -->
-    </div><!-- End .owl-carousel -->
+      <app-shops-carousel></app-shops-carousel>
   </div><!-- End .container -->
 
 

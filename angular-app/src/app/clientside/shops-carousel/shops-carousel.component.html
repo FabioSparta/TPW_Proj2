@@ -1,1 +1,14 @@
-<p>shops-carousel works!</p>
+<owl-carousel-o [options]="customOptions">
+  <ng-container *ngFor="let shop of this.shops;">
+    <ng-template carouselSlide>
+      <div class="product" >
+      <figure style="width: 250px ; height: 250px; text-align: center; vertical-align: middle;">
+      <a href="search/shop/{{ shop.name }}/" style="text-align: center">
+        <img src="assets{{ shop.image }}" alt="{{ shop.name }}" style="max-width: 100%;max-height: 100%;position: absolute;left: 0.7%;top:2%">
+        <p style="color: black"> {{ shop.name }}</p>
+      </a>
+      </figure><!-- End .product-media -->
+      </div>
+    </ng-template>
+  </ng-container>
+</owl-carousel-o>

@@ -18,8 +18,8 @@
           <form action="/search" method="get">
             <div class="header-search-wrapper search-wrapper-wide">
 
-            <div class="select-custom">
-              <!-- DJANGO
+              <div class="select-custom">
+                <!-- DJANGO
               <select id="cat" name="category">
                 <option value="all">All Categories</option>
                 {% if all_categories %}
@@ -29,53 +29,74 @@
                 {% endif %}
               </select>
               -->
-            </div>
-            <label for="q" class="sr-only">Search</label>
+              </div>
+              <label for="q" class="sr-only">Search</label>
               <input type="search" class="form-control" name="name" id="q"
                      placeholder="Search product ..." required> <!--{% if name %} value="{{ name }} {% endif %}-->
               <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-
             </div><!-- End .header-search-wrapper -->
           </form>
         </div><!-- End .header-search -->
       </div>
       <div class="header-right">
         <div class="header-dropdown-link">
-          <!-- DJANGO
-          {% if not request.user|has_group:"shops" %}-->
-          <a href="{% url 'wishlist' %}" class="wishlist-link">
-            <i class="icon-heart-o"></i>
-            <span class="wishlist-txt">Wishlist</span>
-           <!-- <span class="wishlist-count">{{ wishList }}</span> -->
-            <span class="wishlist-count">0</span>
-          </a>
-          <a href="{% url 'cart' %}" class="wishlist-link">
-            <i class="icon-shopping-cart"></i>
-            <span class="cart-txt">Cart</span>
-            <!--<span class="wishlist-count">{{ cart }}</span>-->
-            <span class="wishlist-count">0</span>
-          </a>
-          <div class="dropdown">
-            <a href="login" class="wishlist-link dropdown-toggle" type="button" data-toggle="dropdown">
-              <i class="icon-user"></i>
-              <span style="font-size: 12px" class="wishlist-txt"><strong>--Username--</strong></span>
-            </a>
-            <ul class="dropdown-menu" style="text-align: center; font-size: 12px">
-              <li><a style="color: #1d84ea" href="???">My Account</a></li>
-              <li><a style="color: red" href="{% url 'logout' %}">Logout</a></li>
-            </ul>
-          </div>
-          <a href="login" class="wishlist-link">
-            <i class="icon-user"></i>
-            <span class="wishlist-txt">User</span>
-          </a>
-          <div style="padding-left: 10% ; border-right: 2px solid gray; height: 55px;"> </div>
-          <a href="{% url 'add_shop' %}" class="wishlist-link">
-            <i class="fa fa-store-alt"></i>
-            <span class="wishlist-txt" style="text-align: center">Shop Register</span>
-          </a>
-        </div>
 
+
+
+          <!-- Cart + WishList For Clients Only -->
+          <ng-template [ngIf]="isAuthenticated && this.isShop==='false'" >
+            <a href="/wishlist" class="wishlist-link">
+              <i class="icon-heart-o"></i>
+              <span class="wishlist-txt">Wishlist</span>
+              <!-- <span class="wishlist-count">{{ wishList }}</span> -->
+              <span class="wishlist-count">0</span>
+            </a>
+            <a href="/cart" class="wishlist-link">
+              <i class="icon-shopping-cart"></i>
+              <span class="cart-txt">Cart</span>
+              <!--<span class="wishlist-count">{{ cart }}</span>-->
+              <span class="wishlist-count">0</span>
+            </a>
+          </ng-template>
+          <!-- /Cart + WishList For Clients Only -->
+
+
+
+
+          <!-- Authenticated User Account Options -->
+          <ng-template [ngIf]="isAuthenticated" [ngIfElse]="notAuthenticatedOptions" >
+            <div class="dropdown">
+              <a href="" class="wishlist-link dropdown-toggle" type="button" data-toggle="dropdown">
+                <i class="icon-user"></i>
+                <span style="font-size: 12px" class="wishlist-txt"><strong>{{this.username}}</strong></span>
+              </a>
+              <ul class="dropdown-menu" style="text-align: center; font-size: 12px">
+                <li><a class="btn btn-dark "style="color: dodgerblue" href="/userprofile">My Account</a></li>
+                <li><a class="btn btn-dark" style="color: dodgerblue" (click)="logout()">Logout</a></li>
+              </ul>
+            </div>
+          </ng-template>
+          <!-- /Authenticated User Account Options -->
+
+
+
+          <!-- Not Authenticated User Account Options -->
+          <ng-template #notAuthenticatedOptions>
+            <a href="login" class="wishlist-link">
+              <i class="icon-user"></i>
+              <span class="wishlist-txt">User</span>
+            </a>
+            <div style="padding-left: 10% ; border-right: 2px solid gray; height: 55px;"> </div>
+            <a href="/add_shop" class="wishlist-link">
+              <i class="fa fa-store-alt"></i>
+              <span class="wishlist-txt" style="text-align: center">Shop Register</span>
+            </a>
+          </ng-template>
+          <!-- /Not Authenticated User Account Options -->
+
+
+
+        </div>
       </div><!-- End .header-right -->
     </div><!-- End .container -->
   </div><!-- End .header-middle -->
@@ -91,17 +112,7 @@
 
           <div class="dropdown-menu {% if '/' == request.path %} show {% endif %}">
             <nav class="side-nav">
-              <!--DJANGO
-            <ul class="menu-vertical sf-arrows">
-              {% if all_categories %}
-              {% for c in all_categories %}
-              <li>
-                <a class="sf-with-ul" href="/search/category/{{ c.name }}/"> {{ c.name }}  ({{ c.totDevices }})</a>
-              </li>
-              {% endfor %}
-              {% endif %}
-            </ul>
-            -->
+
               <!-- End .menu-vertical -->
             </nav><!-- End .side-nav -->
           </div><!-- End .dropdown-menu -->
@@ -110,47 +121,53 @@
       <div class="header-center">
         <nav class="main-nav">
           <ul class="menu sf-arrows">
-            <!--DJANGO
-          {% if not request.user|has_group:"shops" %} -->
-          <li class="megamenu-container">
-            <a href="home" class="" [routerLinkActive]="['is-active']">Home</a>
-            <div class=""></div><!-- End .megamenu -->
-            </li>
-            <li class="megamenu-container ">
-              <a routerLink="hotdeals"  [routerLinkActive]="['is-active']">Hot Deals</a>
-              <div class=""></div><!-- End .megamenu -->
-            </li>
-            <li class="megamenu-container">
-              <a href="newarrivals" class="" [routerLinkActive]="['is-active']">Newly Arrived</a>
-              <div class=""></div><!-- End .megamenu -->
-            </li>
-            <li class="megamenu-container">
-              <a href="{% url 'list_shops' %}" class="">Shops</a>
-              <div class=""></div><!-- End .megamenu -->
-            </li>
 
-            <!--DJANGO
-            {% else %}
-            --><!-- caso seja Shop tem navbar diferente -->
-            <!--DJANGO
-          <li class="megamenu-container">
-            <a href="{% url 'products' %}" class="">My Products</a>
-            <div class=""></div>
-            </li>
-            <li class="megamenu-container">
-              <a href="{% url 'add_product' %}" class="">Add Products</a>
-              <div class=""></div>
-            </li>
-            <li class="megamenu-container">
-              <a href="{% url 'items' %}" class="">My Items</a>
-              <div class=""></div>
-            </li>
-            <li class="megamenu-container">
-              <a href="{% url 'add_item' %}" class="">Add Item</a>
-              <div class=""></div>
-            </li>
-            {% endif %}
-            -->
+            <!-- Client Navbar Options -->
+            <ng-template [ngIf]="this.isShop === 'false' " [ngIfElse]="shopOnlyOptions">
+
+              <li class="megamenu-container">
+                <a routerLink="/home"  class="" [routerLinkActive]="['is-active']">Home</a>
+                <div class=""></div><!-- End .megamenu -->
+              </li>
+              <li class="megamenu-container ">
+                <a routerLink="/hotdeals"  [routerLinkActive]="['is-active']">Hot Deals</a>
+                <div class=""></div><!-- End .megamenu -->
+              </li>
+              <li class="megamenu-container">
+                <a routerLink="/newarrivals"  [routerLinkActive]="['is-active']">Newly Arrived</a>
+                <div class=""></div><!-- End .megamenu -->
+              </li>
+              <li class="megamenu-container">
+                <a routerLink="/shops" [routerLinkActive]="['is-active']">Shops</a>
+                <div class=""></div><!-- End .megamenu -->
+              </li>
+            </ng-template>
+            <!-- /Client Navbar Options -->
+
+
+            <!-- Shop Navbar Options -->
+            <ng-template #shopOnlyOptions>
+              <li class="megamenu-container">
+                <a href="/products" class="">My Products</a>
+                <div class=""></div>
+              </li>
+              <li class="megamenu-container">
+                <a href="/add_product" class="">Add Products</a>
+                <div class=""></div>
+              </li>
+              <li class="megamenu-container">
+                <a href="/items" class="">My Items</a>
+                <div class=""></div>
+              </li>
+              <li class="megamenu-container">
+                <a href="/add_item" class="">Add Item</a>
+                <div class=""></div>
+              </li>
+            </ng-template>
+            <!-- /Shop Navbar Options -->
+
+
+
           </ul><!-- End .menu -->
         </nav><!-- End .main-nav -->
       </div><!-- End .col-lg-9 -->

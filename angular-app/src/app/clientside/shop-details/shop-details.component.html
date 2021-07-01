@@ -1,0 +1,32 @@
+<app-navbar></app-navbar>
+<div style="padding: 2% 20%;">
+  <h3><b> Shop Information : </b></h3>
+  <hr>
+  <h5 align="center">{{ shop?.name }}</h5>
+  <div align="center">
+    <img src="assets{{ shop?.image }}" alt="Shop image" style="height: 200px;width: 200px;" class="img-fluid">
+  </div>
+  <p>
+    <span style="color: #39f; font-weight: bold">Owner: </span>
+    <ng-template [ngIf]="shop?.owner"  [ngIfElse]="elseBlock"> {{ shop?.owner?.username }}</ng-template>
+    <ng-template #elseBlock> ---- </ng-template>
+  </p>
+  <p>
+    <span style="color: #39f; font-weight: bold">Address:</span>
+    <ng-template [ngIf]="shop?.address" [ngIfElse]="elseBlock"> {{ shop?.address }}</ng-template>
+    <ng-template #elseBlock> ---- </ng-template>
+  </p>
+  <p>
+    <span style="color: #39f; font-weight: bold">Phone Number: </span>
+    <ng-template [ngIf]="shop?.phone_number" [ngIfElse]="elseBlock"> {{ shop?.phone_number }}</ng-template>
+    <ng-template #elseBlock> ---- </ng-template>
+  </p>
+  <span style="color: #39f; font-weight: bold"> Website URL:</span>
+  <ng-template [ngIf]="shop?.website" [ngIfElse]="elseBlock"> {{ shop?.website }}</ng-template>
+  <ng-template #elseBlock> ---- </ng-template>
+  <p>
+    <span style="color: #39f; font-weight: bold"> Opening Hours: </span>
+    <ng-template [ngIf]="shop?.opening_hours" [ngIfElse] = "elseBlock"> {{ shop?.opening_hours }}</ng-template>
+    <ng-template #elseBlock> ---- </ng-template>
+</div>
+<app-footer></app-footer>
