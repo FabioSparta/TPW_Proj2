@@ -22,6 +22,7 @@ import { ShopsCarouselComponent } from './clientside/shops-carousel/shops-carous
 import { AlertComponent } from './_common/alert/alert.component';
 import { ItemDetailsComponent } from './shopside/item-details/item-details.component';
 import { ProductDetailsComponent } from './shopside/product-details/product-details.component';
+import { CreateProductComponent } from './shopside/create-product/create-product.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ProductDetailsComponent } from './shopside/product-details/product-deta
     ShopsCarouselComponent,
     AlertComponent,
     ItemDetailsComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    CreateProductComponent
   ],
   imports: [
     BrowserModule,

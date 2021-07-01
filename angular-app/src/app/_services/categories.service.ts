@@ -3,6 +3,7 @@ import {Observable} from "rxjs/internal/Observable";
 import {HttpClient,HttpHeaders} from "@angular/common/http";
 import {REST_API_BASE_URL} from "../GlobalVars";
 import {Product} from "../_models/products";
+import {Category} from "../_models/category";
 
 
 const httpOptions = {
@@ -18,8 +19,8 @@ export class CategoriesService {
 
   constructor(private http:HttpClient) { }
 
-  getCategories():Observable<Product[]> {
-    return this.http.get<Product[]>(this.baseURL);
+  getCategories():Observable<Category[]> {
+    return this.http.get<Category[]>(this.baseURL);
   }
 
 }

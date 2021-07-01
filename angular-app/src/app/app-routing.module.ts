@@ -4,16 +4,23 @@ import {HotdealsComponent} from "./clientside/hotdeals/hotdeals.component";
 import {NewarrivalsComponent} from "./clientside/newarrivals/newarrivals.component";
 import {HomeComponent} from "./clientside/home/home.component";
 import {SignInUpComponent} from "./clientside/sign-in-up/sign-in-up.component";
+import {ItemDetailsComponent} from "./shopside/item-details/item-details.component";
+import {ItemsComponent} from "./shopside/items/items.component";
+import {ProductDetailsComponent} from "./shopside/product-details/product-details.component";
+import {ProductsComponent} from "./shopside/products/products.component";
+import {CreateProductComponent} from "./shopside/create-product/create-product.component";
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
   {path: 'home', component:HomeComponent},
   {path: 'login', component: SignInUpComponent},
   {path: 'hotdeals', component: HotdealsComponent},
-  {path: 'newarrivals', component: NewarrivalsComponent}
-  //{path: 'authors', component:AuthorsComponent},
-  //{path: 'overview', component:OverviewComponent},
- // {path: 'authordetails/:id', component:AuthorDetailsComponent},
+  {path: 'newarrivals', component: NewarrivalsComponent},
+  {path: 'items', component:ItemsComponent},
+  {path: 'items/:id', component:ItemDetailsComponent},
+  {path: 'products', component:ProductsComponent},
+  {path: 'products/add', component:CreateProductComponent},
+  {path: 'products/:id', component:ProductDetailsComponent},
 ];
 
 @NgModule({

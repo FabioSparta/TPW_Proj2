@@ -34,14 +34,14 @@ urlpatterns = [
     path('api/account/cart/rem/<int:item_id>', views.rem_from_Cart), #test
 
     #products
-    path('api/products', views.list_prods),
+    path('api/products/', views.list_prods),
     path('api/products/create', views.create_product),
     path('api/products/edit/<int:pid>', views.update_product),
     path('api/products/<int:pid>', views.see_product),
     path('api/products/delete/<int:pid>', views.delete_prod),
 
     #items
-    path('api/items', views.get_list_items),
+    path('api/items/', views.get_list_items),
     path('api/items/create', views.create_item),
     path('api/items/<int:id>', views.see_item),
     path('api/items/edit/<int:id>', views.update_item),

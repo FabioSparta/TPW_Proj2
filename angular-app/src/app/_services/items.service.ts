@@ -13,7 +13,7 @@ const httpOptions = {
 })
 
 export class ItemsService {
-  private baseURL= REST_API_BASE_URL + "/items"
+  private baseURL= REST_API_BASE_URL + "/items/"
 
   constructor(private http:HttpClient) { }
 
@@ -23,22 +23,22 @@ export class ItemsService {
   }
 
   getItem(id: number):Observable<Item> {
-    const url = this.baseURL +'/'+ id
+    const url = this.baseURL + id
     return this.http.get<Item>(url);
   }
 
   createItem(prod:Item):Observable<any>{
-    const url = this.baseURL + "/create";
+    const url = this.baseURL + "create";
     return this.http.post(url,prod,httpOptions);
   }
 
   updateItem(prod: Item):Observable<any>{
-    const url = this.baseURL + "/edit/"+prod.id;
+    const url = this.baseURL + "edit/"+prod.id;
     return this.http.put(url,prod,httpOptions);
   }
 
   deleteItem(prod: Item):Observable<any>{
-    const url = this.baseURL + "/delete/"+prod.id;
+    const url = this.baseURL + "delete/"+prod.id;
     return this.http.delete(url,httpOptions);
   }
 }

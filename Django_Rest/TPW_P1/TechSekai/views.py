@@ -422,6 +422,14 @@ def shop_delete(request):
         return Response('Account deleted successfully', status=status.HTTP_204_NO_CONTENT)
     return Response('You don\'t have permissions to delete this account', status=status.HTTP_406_NOT_ACCEPTABLE)
 
+'''
+@api_view(['GET'])
+def get_list_items(request):
+    items = Item.objects.all()
+    serializer = ItemSerializer(items, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+'''
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
