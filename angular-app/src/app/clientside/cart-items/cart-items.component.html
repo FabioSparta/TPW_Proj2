@@ -7,6 +7,11 @@
   </div><!-- End .page-header -->
 
   <div style="margin-top: 30px "></div>
+    <div *ngIf="purchased" class="container" style="text-align: center">
+                    <p class="btn btn-success disabled btn-lg" style="color: white; margin-bottom: 10px; border-radius: 10px;">Your Order(s) were Submitted Succefully!</p>
+                        <br/>
+                    <p class="btn btn-info disabled btn-lg" style="margin-bottom: 10px; border-radius: 10px"><a style="text-decoration: underline; color: white" routerLink="/userprofile">You can check the orders status in your account's 'ORDERS' Tab</a></p>
+    </div>
   <form id="finish_purchase" method="post" action="/account/shoppingcart/">
     <div class="page-content">
       <div class="cart">

@@ -1227,7 +1227,9 @@ def order_product(request):
 def proccess_order(user, item, qty, payment_meth):
     success = error_qty = error_address = False
     if user.address:
-        if item.stock > qty:
+        print(item.stock)
+        print(qty)
+        if item.stock >= qty:
             total_price = qty * item.price
 
             order = Order(quantity=qty, user=user, item=item,
@@ -1246,6 +1248,9 @@ def proccess_order(user, item, qty, payment_meth):
             error_qty = True
     else:
         error_address = True
+    print(success)
+    print(error_qty)
+    print(error_address)
     return success, error_qty, error_address
 
 @api_view(['GET'])

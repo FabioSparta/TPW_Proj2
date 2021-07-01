@@ -17,8 +17,10 @@ export class CartItemsComponent implements OnInit {
   user: User | undefined;
   test: string | undefined;
   sum: number | undefined;
+  purchased: boolean;
 
   constructor(private cartService: CartService, private route: ActivatedRoute, private userService: UserService, private productService:ProductsService) {
+    this.purchased = false;
   }
 
   ngOnInit(): void {
@@ -51,7 +53,18 @@ export class CartItemsComponent implements OnInit {
   }
 
   order():void{
-      this.productService.orderProduct().subscribe(()=>{location.reload()});
+      this.productService.orderProduct().subscribe(
+        data => {
+            const tela = document.getElementById("finish_purchase");
+            const counter = document.getElementsByClassName("wishlist-count");
+            // @ts-ignore
+            tela.innerHTML = '';
+            counter[1].innerHTML="0";
+            this.purchased=true;
+        },
+        error => {
+
+        });
   }
 
   rowSum(num1:any,num2:any){
