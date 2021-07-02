@@ -1,87 +1,81 @@
-<app-navbar></app-navbar>
+<main class="main">
+  <div class="page-header text-center">
+    <div class="container">
+      <h1 class="page-title">Wishlist</h1>
+    </div><!-- End .container -->
+  </div><!-- End .page-header -->
+  <div style="margin-top: 30px "></div>
 
-<div class="page-wrapper">
-  <main class="main">
-    <div class="page-header text-center">
-      <div class="container">
-        <h1 class="page-title">Wishlist</h1>
-      </div><!-- End .container -->
-    </div><!-- End .page-header -->
-    <div style="margin-top: 30px "></div>
-
-    <div class="page-content">
-      <div class="container">
-        <div *ngIf="wishL?.length==0">
-          <div style="text-align: center">
-            <p class="btn btn-danger disabled btn-lg" style="color: white; margin-bottom: 10px; border-radius: 10px;">
-              Your Wish List is empty! </p>
-          </div>
+  <div class="page-content">
+    <div class="container">
+      <div *ngIf="wishL?.length==0">
+        <div style="text-align: center">
+          <p class="btn btn-danger disabled btn-lg" style="color: white; margin-bottom: 10px; border-radius: 10px;">
+            Your Wish List is empty! </p>
         </div>
-        <div *ngIf="wishL?.length!=0">
-          <table class="table table-wishlist table-mobile">
-            <thead>
-            <tr>
-              <th>Product</th>
-              <th>Lowest Price</th>
-              <th>Stock Status</th>
-              <th></th>
-              <th></th>
-            </tr>
-            </thead>
+      </div>
+      <div *ngIf="wishL?.length!=0">
+        <table class="table table-wishlist table-mobile">
+          <thead>
+          <tr>
+            <th>Product</th>
+            <th>Lowest Price</th>
+            <th>Stock Status</th>
+            <th></th>
+            <th></th>
+          </tr>
+          </thead>
 
-            <tbody>
+          <tbody>
 
 
-            <tr *ngFor="let prod of wishL">
-              <td class="product-col">
-                <div class="product">
-                  <figure class="product-media">
-                    <a routerLink="/products/details/{{ prod?.id }}">
-                      <img src="assets{{ prod?.image }}" alt="Product image">
-                    </a>
-                  </figure>
+          <tr *ngFor="let prod of wishL">
+            <td class="product-col">
+              <div class="product">
+                <figure class="product-media">
+                  <a routerLink="/products/details/{{ prod?.id }}">
+                    <img src="assets{{ prod?.image }}" alt="Product image">
+                  </a>
+                </figure>
 
-                  <h3 class="product-title">
-                    <a routerLink="/products/details/{{ prod?.id }}">{{ prod?.name }}</a>
-                  </h3><!-- End .product-title -->
-                </div><!-- End .product -->
-              </td>
-              <td class="price-col">${{ prod?.lowest_price }}</td>
-              <!--{% for key, value in prod_stock.items %}-->
-              <!--{% if key == prod.name %}-->
-              <!--{% if value == True %}-->
-              <td *ngIf="searchDict(prod.name)" class="stock-col"><span class="in-stock">In stock</span></td>
-              <td *ngIf="searchDict(prod.name)" class="action-col">
-                <a routerLink="/products/details/{{ prod?.id }}" class="btn btn-block btn-outline-primary-2"><i
-                  class="icon-cart-plus"></i>Go to Product </a>
-              </td>
-              <!--{% else %}-->
-              <td *ngIf="!searchDict(prod.name)" class="stock-col"><span class="out-of-stock">Out of stock</span></td>
-              <td *ngIf="!searchDict(prod.name)" class="action-col">
-                <button class="btn btn-block btn-outline-primary-2 disabled">Out of Stock</button>
-              </td>
-              <!--{% endif %}
-              {% endif %}
-              {% endfor %}-->
-              <td class="remove-col"><a style="cursor: pointer" (click)="remWishList(prod.id)" class="btn-remove"><i
-                class="icon-close"></i></a></td>
-            </tr>
-            </tbody>
-          </table><!-- End .table table-wishlist -->
-          <div class="wishlist-share">
-            <div class="social-icons social-icons-sm mb-2">
-              <label class="social-label">Share on:</label>
-              <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-              <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-              <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-              <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
-              <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-            </div><!-- End .soial-icons -->
-          </div><!-- End .wishlist-share -->
-        </div>
-      </div><!-- End .container -->
-    </div><!-- End .page-content -->
-  </main><!-- End .main -->
-</div>
-
-<app-footer></app-footer>
+                <h3 class="product-title">
+                  <a routerLink="/products/details/{{ prod?.id }}">{{ prod?.name }}</a>
+                </h3><!-- End .product-title -->
+              </div><!-- End .product -->
+            </td>
+            <td class="price-col">${{ prod?.lowest_price }}</td>
+            <!--{% for key, value in prod_stock.items %}-->
+            <!--{% if key == prod.name %}-->
+            <!--{% if value == True %}-->
+            <td *ngIf="searchDict(prod.name)" class="stock-col"><span class="in-stock">In stock</span></td>
+            <td *ngIf="searchDict(prod.name)" class="action-col">
+              <a routerLink="/products/details/{{ prod?.id }}" class="btn btn-block btn-outline-primary-2"><i
+                class="icon-cart-plus"></i>Go to Product </a>
+            </td>
+            <!--{% else %}-->
+            <td *ngIf="!searchDict(prod.name)" class="stock-col"><span class="out-of-stock">Out of stock</span></td>
+            <td *ngIf="!searchDict(prod.name)" class="action-col">
+              <button class="btn btn-block btn-outline-primary-2 disabled">Out of Stock</button>
+            </td>
+            <!--{% endif %}
+            {% endif %}
+            {% endfor %}-->
+            <td class="remove-col"><a style="cursor: pointer" (click)="remWishList(prod.id)" class="btn-remove"><i
+              class="icon-close"></i></a></td>
+          </tr>
+          </tbody>
+        </table><!-- End .table table-wishlist -->
+        <div class="wishlist-share">
+          <div class="social-icons social-icons-sm mb-2">
+            <label class="social-label">Share on:</label>
+            <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+            <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+            <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+            <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+            <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+          </div><!-- End .soial-icons -->
+        </div><!-- End .wishlist-share -->
+      </div>
+    </div><!-- End .container -->
+  </div><!-- End .page-content -->
+</main><!-- End .main -->

@@ -10,15 +10,16 @@ import {ItemsService} from "../../_services/items.service";
 export class ItemsComponent implements OnInit {
 
   items : Item[] | undefined;
+  loaded:boolean;
 
-  constructor(private itemsService: ItemsService) { }
+  constructor(private itemsService: ItemsService) {this.loaded=false; }
 
   ngOnInit(): void {
     this.getItems();
   }
 
   getItems():void{
-    this.itemsService.getItems().subscribe(items => this.items = items);
+    this.itemsService.getItems().subscribe(items => {this.items = items; this.loaded=true;});
   }
 
 

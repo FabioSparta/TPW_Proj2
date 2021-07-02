@@ -39,7 +39,7 @@ export class ItemDetailsComponent implements OnInit {
             this.feedback += ("\n".concat(key.concat(" : ").concat(val)).concat("\n")).toString();
           }
         }
-        ;console.log(err)
+        console.log(err)
       });
   }
 

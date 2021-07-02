@@ -1,7 +1,5 @@
-<div class="page-wrapper">
-  <app-navbar></app-navbar>
-  <h2 style="padding-left: 20%; padding-top: 2%; color: #39f" >Products List</h2>
-  <div class="container" style="padding-top: 5%; padding-bottom: 3%">
+<h2 style="padding-left: 20%; padding-top: 2%; color: #39f">Products List</h2>
+<div class="container" style="padding-top: 5%; padding-bottom: 3%">
   <div class="cat-blocks-container" style="text-align: center">
     <div class="row justify-content-evenly">
       <div class="col-xl-3" *ngFor="let p of this.products">
@@ -16,15 +14,13 @@
               <a>{{ p.category.name }}</a>
             </div><!-- End .product-cat -->
             <h2 class="product-title" style="color: white"><a>{{ p.name }}</a></h2>
-            <a routerLink="/products/{{ p.id }}" >Open Product</a>
+            <a routerLink="/products/{{ p.id }}">Open Product</a>
           </div><!-- End .product-body -->
         </div><!-- End .product -->
       </div>
     </div>
-    <p  *ngIf="!products?.length" class="btn btn-danger disabled btn-lg" style="color: white; margin-bottom: 10px; border-radius: 10px;"> Sorry, no products available! </p>
+    <p *ngIf="!products?.length && loaded" class="btn btn-danger disabled btn-lg"
+       style="color: white; margin-bottom: 10px; border-radius: 10px;"> Sorry, no products available! </p>
     <br>
   </div><!-- End .cat-blocks-container -->
 </div><!-- End .container -->
-
-<app-footer></app-footer>
-</div>

@@ -41,15 +41,18 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     let username = this.authService.getUsername()
-    if(username != "") this.username = username;
+    if (username != "") this.username = username;
 
-    let isShop= this.authService.isShop();
-    if(isShop!=null) this.isShop= <string>isShop;
+    let isShop = this.authService.isShop();
+    if (isShop != null) this.isShop = <string>isShop;
 
     this.isAuthenticated = this.authService.isAuthenticated()
     this.getCategories();
-    this.getCart();
-    this.getWishL();
+    // @ts-ignore
+    if (!eval(this.authService.isShop())){
+      this.getCart();
+      this.getWishL();
+    }
   }
 
   logout():void{

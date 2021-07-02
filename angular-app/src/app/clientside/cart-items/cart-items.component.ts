@@ -18,9 +18,11 @@ export class CartItemsComponent implements OnInit {
   test: string | undefined;
   sum: number | undefined;
   purchased: boolean;
+  loaded: boolean;
 
   constructor(private cartService: CartService, private route: ActivatedRoute, private userService: UserService, private productService:ProductsService) {
     this.purchased = false;
+    this.loaded=false;
   }
 
   ngOnInit(): void {
@@ -33,6 +35,7 @@ export class CartItemsComponent implements OnInit {
   private getCart(): void {
     this.cartService.getCart().subscribe(user_cart_items => {
       this.user_cart_items = user_cart_items;
+      this.loaded=true;
     });
   }
 

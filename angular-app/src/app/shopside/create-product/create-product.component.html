@@ -1,78 +1,77 @@
-<div class="page-wrapper">
-  <app-navbar></app-navbar>
-  <h2 style="padding-left: 20%; padding-top: 2%; color: #39f" >Add Product</h2>
-  <form [formGroup]="createProdForm" (ngSubmit)="onSubmit()" style="padding: 2% 20%;" enctype="multipart/form-data">
-    <div class="form-group row">
-      <label class="col-sm-2"> Reference Number </label>
-      <div class="col-md-4">
-        <input type="number" style="text-align: center" class="form-control " required="" placeholder="" formControlName="reference">
-      </div>
+<h2 style="padding-left: 20%; padding-top: 2%; color: #39f">Add Product</h2>
+<form [formGroup]="createProdForm" (ngSubmit)="onSubmit()" style="padding: 2% 20%;" enctype="multipart/form-data">
+  <div class="form-group row">
+    <label class="col-sm-2"> Reference Number </label>
+    <div class="col-md-4">
+      <input type="number" style="text-align: center" class="form-control " required="" placeholder=""
+             formControlName="reference">
     </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Name </label>
-        <div class="col-md-4">
-          <input maxlength="50" required="" id="id_name" class="form-control" formControlName="name">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Details </label>
-        <div class="col-md-4">
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Name </label>
+    <div class="col-md-4">
+      <input maxlength="50" required="" id="id_name" class="form-control" formControlName="name">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Details </label>
+    <div class="col-md-4">
             <textarea cols="40" rows="10" maxlength="300" required="" class="form-control" formControlName="details">
             </textarea>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Warehouse </label>
-        <div class="col-md-4">
-          <input maxlength="50" required="" class="form-control" formControlName="warehouse">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Image </label>
-        <div class="col-md-4">
-          <input type="file" accept="image/*" (change)="onFileChanged($event)">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Category </label>
-        <div class="col-md-4">
-          <select formControlName="category" required="" id="id_category" class="form-control" (change)="selectChange('category')">
-            <option value="" selected> -------------- Choose Category --------------</option>
-            <option *ngFor="let c of categories" [ngValue]="c">{{c.name}}
-            </option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Other category </label>
-        <div class="col-md-4">
-          <input type="text" class="form-control" maxlength="50" formControlName="new_category">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Brand </label>
-        <div class="col-md-4">
-          <select formControlName="brand" required="" id="id_brand" class="form-control" (change)="selectChange('brand')">
-            <option value="" selected> -------------- Choose Brand --------------</option>
-          <option *ngFor="let b of brands"  [ngValue]="b">{{b.name}} </option>
-          </select>
-        </div>
-      </div>
-    <div class="form-group row">
-      <label class="col-sm-2"> Other brand </label>
-      <div class="col-md-4">
-        <input type="text" class="form-control" maxlength="50" formControlName="new_brand">
-      </div>
     </div>
-      <div class="form-group row">
-        <label class="col-sm-2"> Price </label>
-        <div class="col-md-4">
-          <input type="number" style="text-align: center" class="form-control " required="" placeholder="" formControlName="price">
-        </div>
-      </div>
-    <div style="padding-left: 25%;" class="form-group" >
-        <button class="btn btn-primary rounded btn-sm" type="submit">Create</button>
-      </div>
-    </form>
-  <app-footer></app-footer>
-</div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Warehouse </label>
+    <div class="col-md-4">
+      <input maxlength="50" required="" class="form-control" formControlName="warehouse">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Image </label>
+    <div class="col-md-4">
+      <input type="file" accept="image/*" (change)="onFileChanged($event)">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Category </label>
+    <div class="col-md-4">
+      <select formControlName="category" required="" id="id_category" class="form-control"
+              (change)="selectChange('category')">
+        <option value="" selected> -------------- Choose Category --------------</option>
+        <option *ngFor="let c of categories" [ngValue]="c">{{c.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Other category </label>
+    <div class="col-md-4">
+      <input type="text" class="form-control" maxlength="50" formControlName="new_category">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Brand </label>
+    <div class="col-md-4">
+      <select formControlName="brand" required="" id="id_brand" class="form-control" (change)="selectChange('brand')">
+        <option value="" selected> -------------- Choose Brand --------------</option>
+        <option *ngFor="let b of brands" [ngValue]="b">{{b.name}} </option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Other brand </label>
+    <div class="col-md-4">
+      <input type="text" class="form-control" maxlength="50" formControlName="new_brand">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Price </label>
+    <div class="col-md-4">
+      <input type="number" style="text-align: center" class="form-control " required="" placeholder=""
+             formControlName="price">
+    </div>
+  </div>
+  <div style="padding-left: 25%;" class="form-group">
+    <button class="btn btn-primary rounded btn-sm" type="submit">Create</button>
+  </div>
+</form>

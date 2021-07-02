@@ -11,15 +11,16 @@ import {ProductsService} from "../../_services/products.service";
 export class ProductsComponent implements OnInit {
 
   products : Product[] | undefined;
+  loaded: boolean;
 
-  constructor(private productsService: ProductsService) { }
+  constructor(private productsService: ProductsService) { this.loaded=false; }
 
   ngOnInit(): void {
     this.getProducts();
   }
 
   getProducts():void{
-    this.productsService.getShopProducts().subscribe(prods => this.products = prods);
+    this.productsService.getShopProducts().subscribe(prods => {this.products = prods; this.loaded=true;});
   }
 
 

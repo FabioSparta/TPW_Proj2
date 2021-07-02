@@ -28,6 +28,12 @@ export class AuthService {
     return this.http.post<any>(url, user, httpOptions);
   }
 
+  signUpShop(shop: {}): Observable<any>  {
+    console.log(shop);
+    const url = REST_API_BASE_URL + '/shops/create';
+    return this.http.post<any>(url, shop, httpOptions);
+  }
+
   signIn(username: string, pw: string): Observable < any > {
     const url = REST_API_BASE_URL + '/account/login';
     return this.http.post(url, {username: username, password: pw}, httpOptions);

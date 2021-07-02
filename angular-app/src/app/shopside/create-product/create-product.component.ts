@@ -37,6 +37,17 @@ export class CreateProductComponent implements OnInit {
   constructor(private route: ActivatedRoute, private location: Location, private prodService: ProductsService,private catService: CategoriesService, private brandService: BrandsService,private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    this.createProdForm = this.formBuilder.group({
+    reference:'',
+    name: '',
+    details: '',
+    warehouse: '',
+    price: 0,
+    new_category:'',
+    new_brand:'',
+    category:'',
+    brand:'',
+  });
     this.createProdForm.controls['new_category'].disable()
     this.createProdForm.controls['new_brand'].disable()
     this.getCategories();

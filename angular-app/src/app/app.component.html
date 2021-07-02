@@ -1,1 +1,5 @@
+<div class="page-wrapper">
+<ng-template [ngIf]="showNavabar"> <app-navbar></app-navbar> </ng-template>
 <router-outlet></router-outlet>
+<ng-template [ngIf]="showNavabar"> <app-footer></app-footer> </ng-template>
+</div>

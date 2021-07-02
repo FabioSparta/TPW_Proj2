@@ -10,7 +10,8 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class ListProductsComponent implements OnInit {
   products : Product[] | undefined;
-  constructor(private productService: ProductsService, private route: ActivatedRoute) { }
+  loaded:boolean;
+  constructor(private productService: ProductsService, private route: ActivatedRoute) { this.loaded=false;}
 
   ngOnInit(): void {
     this.searchProducts();
@@ -30,12 +31,14 @@ export class ListProductsComponent implements OnInit {
 
       this.productService.searchProductsByKeyAndCat(key,cat).subscribe(products=> {
         this.products = products;
+        this.loaded=true;
       });
     }
 
     if(!this.route.snapshot.paramMap.has("key") && !this.route.snapshot.paramMap.has("cat")){
       this.productService.searchAllProducts().subscribe(products=> {
         this.products = products;
+        this.loaded=true;
       });
     }
 
@@ -48,6 +51,7 @@ export class ListProductsComponent implements OnInit {
 
       this.productService.searchProductsByCat(cat).subscribe(products=> {
         this.products = products;
+        this.loaded=true;
       });
     }
 

@@ -66,7 +66,7 @@ export class SignInComponent implements OnInit {
       localStorage.setItem('userId',data.userId);
       localStorage.setItem('username',data.username);
       localStorage.setItem('shopId',data.shopId);
-        this.router.navigate(['/']);
+      window.location.href="/home";
     })
   }
 

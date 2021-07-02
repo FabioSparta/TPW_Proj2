@@ -53,7 +53,7 @@ export class CreateItemComponent implements OnInit {
   }
 
   goBack(): void {
-    this.location.back();
+    window.location.href="/items";
   }
 
 }

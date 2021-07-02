@@ -88,7 +88,7 @@
               <span class="wishlist-txt">User</span>
             </a>
             <div style="padding-left: 10% ; border-right: 2px solid gray; height: 55px;"> </div>
-            <a href="/add_shop" class="wishlist-link">
+            <a routerLink="/signup/shop" class="wishlist-link">
               <i class="fa fa-store-alt"></i>
               <span class="wishlist-txt" style="text-align: center">Shop Register</span>
             </a>
@@ -135,7 +135,7 @@
             <ng-template [ngIf]="this.isShop === 'false' " [ngIfElse]="shopOnlyOptions">
 
               <li class="megamenu-container">
-                <a routerLink="/home"  class="" [routerLinkActive]="['is-active']">Home</a>
+                <a href="/home"  class="" [routerLinkActive]="['is-active']">Home</a>
                 <div class=""></div><!-- End .megamenu -->
               </li>
               <li class="megamenu-container ">

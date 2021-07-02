@@ -1,107 +1,108 @@
-<div class="page-wrapper">
-  <app-navbar></app-navbar>
-  <h2 style="padding-left: 20%; padding-top: 2%; color: #39f" >Edit Product</h2>
-      <div *ngIf="product;" style="padding: 2% 20%;" enctype="multipart/form-data">
-        <div class="form-group row">
-          <label class="col-sm-2"> Name </label>
-          <div class="col-md-4">
-            <input [(ngModel)]="product.name" maxlength="50" required="" id="id_name" class="form-control">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-sm-2"> Details </label>
-          <div class="col-md-4">
-            <textarea [(ngModel)]="product.details" cols="40" rows="10" maxlength="300" required="" class="form-control">
+<h2 style="padding-left: 20%; padding-top: 2%; color: #39f">Edit Product</h2>
+<div *ngIf="product;" style="padding: 2% 20%;" enctype="multipart/form-data">
+  <div class="form-group row">
+    <label class="col-sm-2"> Name </label>
+    <div class="col-md-4">
+      <input [(ngModel)]="product.name" maxlength="50" required="" id="id_name" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Details </label>
+    <div class="col-md-4">
+            <textarea [(ngModel)]="product.details" cols="40" rows="10" maxlength="300" required=""
+                      class="form-control">
             </textarea>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-sm-2"> Warehouse </label>
-          <div class="col-md-4">
-            <input [(ngModel)]="product.warehouse" maxlength="50" required="" class="form-control">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-sm-2"> Image </label>
-          <div class="col-md-4">
-            <input [(ngModel)]="product.image" type="file" accept="image/*" (change)="onFileChanged($event)">
-            </div>
-        </div>
-          <div class="form-group row">
-            <label class="col-sm-2"> Category </label>
-            <div class="col-md-4">
-              <select class="form-control" [(ngModel)]="product.category" (ngModelChange)="selectChange('category')">
-                <option [ngValue]="product.category" selected> {{product.category.name}} </option>
-                <option *ngFor="let c of categories" [ngValue]="c">{{c.name}}</option>
-              </select>
-            </div>
-          </div>
-        <div class="form-group row">
-            <label class="col-sm-2"> Brand </label>
-            <div class="col-md-4">
-              <select class="form-control" [(ngModel)]="product.brand" (ngModelChange)="selectChange('brand')">
-                <option [ngValue]="product.brand" selected> {{product.brand.name}} </option>
-                <option *ngFor="let b of brands" [ngValue]="b">{{b.name}}</option>
-              </select>
-            </div>
-          </div>
-        <form [formGroup]="createProdForm">
-        <div class="form-group row">
-            <label class="col-sm-2"> Other category </label>
-            <div class="col-md-4">
-              <input type="text" class="form-control" maxlength="50" formControlName="new_category">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2"> Other brand </label>
-            <div class="col-md-4">
-              <input type="text" class="form-control" maxlength="50" formControlName="new_brand">
-            </div>
-          </div>
-        </form>
-        <div class="form-group" style="padding: 2% 20%;">
-          <button class="btn btn-primary rounded btn-sm" type="button" (click)="update()">Update</button>
-          <span  style="padding-left: 2%"></span>
-          <button class="btn btn-danger rounded btn-sm" type="button" data-toggle="modal" data-target="#exampleModal">
-          Delete
-          </button>
-          <div style="padding-top: 2%">
-            <textarea  *ngIf="feedback!=''" style="color:red; resize: none" disabled readonly class="form-control"> !! Error !! {{feedback}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Warehouse </label>
+    <div class="col-md-4">
+      <input [(ngModel)]="product.warehouse" maxlength="50" required="" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Image </label>
+    <div class="col-md-4">
+      <input [(ngModel)]="product.image" type="file" accept="image/*" (change)="onFileChanged($event)">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Category </label>
+    <div class="col-md-4">
+      <select class="form-control" [(ngModel)]="product.category" (ngModelChange)="selectChange('category')">
+        <option [ngValue]="product.category" selected> {{product.category.name}} </option>
+        <option *ngFor="let c of categories" [ngValue]="c">{{c.name}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2"> Brand </label>
+    <div class="col-md-4">
+      <select class="form-control" [(ngModel)]="product.brand" (ngModelChange)="selectChange('brand')">
+        <option [ngValue]="product.brand" selected> {{product.brand.name}} </option>
+        <option *ngFor="let b of brands" [ngValue]="b">{{b.name}}</option>
+      </select>
+    </div>
+  </div>
+  <form [formGroup]="createProdForm">
+    <div class="form-group row">
+      <label class="col-sm-2"> Other category </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" maxlength="50" formControlName="new_category">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2"> Other brand </label>
+      <div class="col-md-4">
+        <input type="text" class="form-control" maxlength="50" formControlName="new_brand">
+      </div>
+    </div>
+  </form>
+  <div class="form-group" style="padding: 2% 20%;">
+    <button class="btn btn-primary rounded btn-sm" type="button" (click)="update()">Update</button>
+    <span style="padding-left: 2%"></span>
+    <button class="btn btn-danger rounded btn-sm" type="button" data-toggle="modal" data-target="#exampleModal">
+      Delete
+    </button>
+    <div style="padding-top: 2%">
+            <textarea *ngIf="feedback!=''" style="color:red; resize: none" disabled readonly class="form-control"> !! Error !! {{feedback}}
             </textarea>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <p style="padding-top: 20px; padding-bottom: 20px; font-size: 20px">Are you sure you want to delete this product?</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" id="closeBtn" class="btn btn-primary" data-dismiss="modal">No</button>
-                <button type="button" (click)="delete()" class="btn btn-danger">Yes</button>
-              </div>
-            </div>
+          <div class="modal-body">
+            <p style="padding-top: 20px; padding-bottom: 20px; font-size: 20px">Are you sure you want to delete this
+              product?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="closeBtn" class="btn btn-primary" data-dismiss="modal">No</button>
+            <button type="button" (click)="delete()" class="btn btn-danger">Yes</button>
           </div>
         </div>
       </div>
     </div>
-  <app-footer></app-footer>
+  </div>
 </div>
 <script>
   let cat = document.getElementById("id_category")
   let b = document.getElementById("id_brand")
 
   cat.addEventListener("change", categoryUp);
+
   function categoryUp() {
     document.getElementById("id_new_cat").disabled = cat.value !== 'Other';
   }
 
   b.addEventListener("change", brandUp);
+
   function brandUp() {
     document.getElementById("id_new_brand").disabled = b.value !== 'Other';
   }

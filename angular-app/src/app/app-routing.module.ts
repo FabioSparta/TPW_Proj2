@@ -18,12 +18,14 @@ import {MyProductDetailsComponent} from "./clientside/my-product-details/my-prod
 import {CartItemsComponent} from "./clientside/cart-items/cart-items.component";
 import {WishlistComponent} from "./clientside/wishlist/wishlist.component";
 import {CreateItemComponent} from "./shopside/create-item/create-item.component";
+import {SignupShopComponent} from "./shopside/signup-shop/signup-shop.component";
 
 const routes: Routes = [
   {path: '', component:HomeComponent},
   {path: 'home', component:HomeComponent},
   {path: 'login', component: SignInComponent},
   {path: 'signup', component: SignUpComponent},
+  {path: 'signup/shop', component: SignupShopComponent},
   {path: 'hotdeals', component: HotdealsComponent},
   {path: 'newarrivals', component: NewarrivalsComponent},
   {path: 'shops', component: ShopsListComponent},

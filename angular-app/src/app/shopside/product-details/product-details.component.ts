@@ -64,7 +64,7 @@ export class ProductDetailsComponent implements OnInit {
     let new_brand = this.createProdForm.controls['new_brand'].value
 
     // @ts-ignore
-    this.prodService.updateProduct(this.product, new_cat, new_brand).subscribe(() => this.goBack(),
+    this.prodService.updateProduct(this.product, new_cat, new_brand).subscribe(() => window.location.href="/products",
       (err) => {
       // @ts-ignore
         for (const [key, value] of Object.entries(err.error)) {
@@ -75,7 +75,7 @@ export class ProductDetailsComponent implements OnInit {
               this.feedback += ("\n".concat(key.concat(" : ").concat(val)).concat("\n")).toString();
             }
           }
-        ;console.log(err)});
+        console.log(err)});
   }
 
   delete():void {

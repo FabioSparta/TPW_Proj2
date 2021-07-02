@@ -9,16 +9,22 @@ import {ShopsService} from "../../_services/shops.service";
 })
 
 export class ShopsListComponent implements OnInit {
-  shops : Shop[] | undefined
+  shops : Shop[] | undefined;
+  loaded: boolean;
 
-  constructor(private shopService : ShopsService) { }
+  constructor(private shopService : ShopsService) {
+    this.loaded=false;
+  }
 
   ngOnInit(): void {
     this.getShops();
   }
 
   getShops(): void{
-    this.shopService.getShops().subscribe(shops => this.shops=shops);
+    this.shopService.getShops().subscribe(shops =>{
+      this.shops=shops
+      this.loaded=true;
+    });
   }
 
 }

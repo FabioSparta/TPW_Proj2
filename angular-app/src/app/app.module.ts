@@ -33,6 +33,7 @@ import { ListProductsComponent } from './clientside/list-products/list-products.
 import { MyProductDetailsComponent } from './clientside/my-product-details/my-product-details.component';
 import { WishlistComponent } from './clientside/wishlist/wishlist.component';
 import { CreateItemComponent } from './shopside/create-item/create-item.component';
+import { SignupShopComponent } from './shopside/signup-shop/signup-shop.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { CreateItemComponent } from './shopside/create-item/create-item.componen
     MyProductDetailsComponent,
     WishlistComponent,
     CreateItemComponent,
+    SignupShopComponent,
   ],
   imports: [
     BrowserModule,
