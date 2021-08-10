@@ -11,7 +11,7 @@ Theme : Shopping Store
       
 ## Report:
     For further details on this project check the PDF file: 
-    [I'm an inline-style link with title](https://www.google.com "Google's Homepage")
+   [link text itself]: http://www.reddit.com
     https://github.com/FabioSparta/TPW_Proj2/blob/main/Relatorio_TPW_App_TechSekai.pdf
     (This report is written in Portuguese from Portugal)
 
