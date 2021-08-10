@@ -10,9 +10,9 @@ Theme : Shopping Store
       > Pedro Souto
       
 ## Report:
-    For further details on this project check the PDF file: 
-    [https://github.com/FabioSparta/TPW_Proj2/blob/main/Relatorio_TPW_App_TechSekai.pdf]
-    (This report is written in Portuguese from Portugal)
+   * For further details on this project check the PDF file: 
+     https://github.com/FabioSparta/TPW_Proj2/blob/main/Relatorio_TPW_App_TechSekai.pdf
+     (This report is written in Portuguese from Portugal)
 
 ## To install Django Rest
 • pip install djangorestframework
