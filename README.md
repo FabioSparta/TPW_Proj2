@@ -1,6 +1,6 @@
 # TPW_Proj2 : TechSekai 
 
-Website Developped using Django Rest Framework(Backend) and Angular(Frontend) for TPW's Course 2nd Project  (**Tecnologias e Programação Web** ) (3rd Year - 2nd Semester)
+Website Developped using Django Rest Framework(Backend) and Angular(Frontend) for TPW's Course 2nd Project  (**Tecnologias e Programação Web**) (3rd Year - 2nd Semester)
 
 Theme : Shopping Store
 
