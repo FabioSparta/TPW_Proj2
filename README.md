@@ -11,7 +11,7 @@ Theme : Shopping Store
       
 ## Report:
    * For further details on this project check the PDF file: 
-     https://github.com/FabioSparta/TPW_Proj2/blob/main/Relatorio_TPW_App_TechSekai.pdf
+     [Report PDF] (https://github.com/FabioSparta/TPW_Proj2/blob/main/Relatorio_TPW_App_TechSekai.pdf "Report PDF") 
      (This report is written in Portuguese from Portugal)
 
 ## To install Django Rest
