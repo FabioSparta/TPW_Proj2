@@ -8,8 +8,10 @@ Theme : Shopping Store
       > Fábio Carmelino
       > Maria Rocha
       > Pedro Souto
+      
 ## Report:
     For further details on this project check the PDF file: 
+    [I'm an inline-style link with title](https://www.google.com "Google's Homepage")
     https://github.com/FabioSparta/TPW_Proj2/blob/main/Relatorio_TPW_App_TechSekai.pdf
     (This report is written in Portuguese from Portugal)
 
